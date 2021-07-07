@@ -19,10 +19,12 @@ def random_hex():
     return random_number
 
 def convert(seconds):
+    """Convert time"""
     ty_res = time.gmtime(seconds)
     res = time.strftime("%H hours, %M minutes and %S seconds", ty_res)
 
 def get_size(bytes, suffix="B"):
+    """Return size given bytes"""
     factor = 1024
     for unit in ["", "K", "M", "G", "T", "P"]:
         if bytes < factor:
@@ -88,7 +90,7 @@ class MongoDB(commands.Cog):
         b_start = time.monotonic()
         self.bot.blacklist = await update_bl()
         b_end = time.monotonic()
-        print(f"Blacklist Retrieved in {(round((b_end - b_start) * 1000, 2))/100} seconds.")
+        print(f"Blacklist Retrieved in {(round((b_end - b_start) * 1000, 2))/1000} seconds.")
         self.bot.prefix_dict = prefix_dict
         self.bot.user_dict = user_dict
         print("Added Prefix and User Cache.")

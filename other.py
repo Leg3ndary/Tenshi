@@ -6,23 +6,19 @@ This software is licensed under Creative Commons Attribution-NonCommercial-NoDer
 
 import discord
 from discord.ext import commands, tasks
-import datetime as dt
+import datetime
 import random as rnd
-import asyncio
 import matplotlib.pyplot as plt
 import numpy as np
+from colors import *
 
-# Functions
-def random_hex():
-    random_number = rnd.randint(0,0xffffff)
-    return(random_number)
     
 def bot_latency(latency):
     ping = latency * 1000
     ping = round(ping, 2)
     return(ping)
 
-# Cog Setup
+
 class Other(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -65,26 +61,27 @@ class Other(commands.Cog):
 Pong! 
 <Tenshi Latency='{str(bot_latency(self.bot.latency))}'>
 ```""", 
-            timestamp=dt.datetime.utcnow(), 
-            color=random_hex()
+            timestamp=datetime.datetime.utcnow(), 
+            color=c_random_color()
             )
         embed.set_image(url="attachment://ping.png")
         return await ctx.send(file=image, embed=embed)
     
-    @commands.command(aliases=['pfp','icon', 'av'])
-    async def avatar(self, ctx, *,  avatarmember : discord.Member=None):
-        if not avatarmember:
-            avatarmember = ctx.author
+    @commands.command(aliases=['pfp'])
+    async def avatar(self, ctx, *, member : discord.Member=None):
+        """Display a users avatar"""
+        if not member:
+            member = ctx.author
 
         embed = discord.Embed(
-            title=f"{avatarmember.display_name}'s Avatar", 
-            timestamp=dt.datetime.utcnow(), 
-            color=random_hex()
+            title=f"{member.display_name}'s Avatar", 
+            timestamp=datetime.datetime.utcnow(), 
+            color=c_random_color()
             ) 
-        embed.set_image(url=avatarmember.avatar_url)
+        embed.set_image(url=member.avatar_url)
         return await ctx.send(embed=embed)
     
-    @commands.command(aliases=['ab'])
+    @commands.command()
     async def about(self, ctx):
         embed = discord.Embed(
             title="About Tenshi",
@@ -92,8 +89,8 @@ Pong!
             The bot itself has a range of features most of which aren't useful however are fun and interesting!
             Hope you'll continue to support it! 
             -Ben""",
-            timestamp=dt.datetime.utcnow(), 
-            color=random_hex()
+            timestamp=datetime.datetime.utcnow(), 
+            color=c_random_color()
         )
         embed.add_field(
             name="Thank You!",
@@ -105,7 +102,5 @@ Pong!
         return await ctx.send(embed=embed)
         
 
-
-# Adding the Cog
 def setup(bot):
     bot.add_cog(Other(bot))

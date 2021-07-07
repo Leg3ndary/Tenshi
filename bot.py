@@ -34,12 +34,12 @@ cog_list = [
     "devonly",
     "help",
     "anime",
-    "urbandictionary",
+    "urbandictionary", # Done
     "other",
     "music",
     "unsplash",
     "dictionary",
-    "systeminfo",
+    "systeminfo", # Done
     "mongodb",
     "data",
     "colors",
