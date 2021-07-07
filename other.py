@@ -7,7 +7,6 @@ This software is licensed under Creative Commons Attribution-NonCommercial-NoDer
 import discord
 from discord.ext import commands, tasks
 import datetime
-import random as rnd
 import matplotlib.pyplot as plt
 import numpy as np
 from colors import *
@@ -54,7 +53,7 @@ class Other(commands.Cog):
         
         plt.savefig("ping.png")
         plt.close()
-
+    
         embed = discord.Embed(
             title="Tenshi Ping", 
             description=f"""```md
