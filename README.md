@@ -15,3 +15,6 @@ To keep it short and simple:
 For more information see the [LICENSE.md](https://github.com/Leg3ndary/Tenshi/blob/main/LICENSE.md) file for the full license.
 
 Copyright (C) 2021 Ben Z.
+
+# Warning
+I accidently added the env without knowing for multiple commits so older commits have been completely removed
