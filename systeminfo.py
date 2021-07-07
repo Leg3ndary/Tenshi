@@ -10,9 +10,11 @@ import datetime
 import psutil
 import platform
 from colors import *
+import random
 
     
 def get_size(bytes, suffix="B"):
+    """Return the correct data from bytes"""
     factor = 1024
     for unit in ["", "K", "M", "G", "T", "P"]:
         if bytes < factor:
@@ -21,17 +23,15 @@ def get_size(bytes, suffix="B"):
 
 
 class SystemInfo(commands.Cog):
+    """All of our system info for those people who want to see how shit it is"""
     def __init__(self, bot):
         self.bot = bot
-
-    @commands.command()
-    async def testt(self, ctx):
-        print(self.bot.test_var)
 
     @commands.group()
     @commands.cooldown(3.0, 7.0, commands.BucketType.user)
     async def system(self, ctx):
-        if ctx.invoked_subcommand is None:
+        """Actual system info"""
+        if not ctx.invoked_subcommand:
             options = ['info', 'boot', 'cpu', 'memory', 'disk']
             embed = discord.Embed(
                 title="Tenshi PC Info",
@@ -45,15 +45,21 @@ class SystemInfo(commands.Cog):
 ```
                 Example:
 ```fix
-t>system {rnd.choice(options)}
+t>system {random.choice(options)}
 ```""",
                 timestamp=datetime.datetime.utcnow(),
                 color=c_random_color()
             )
             return await ctx.send(embed=embed)
 
-    @system.command()
+    @system.command(
+        help="Display system information",
+        brief="System Info",
+        usage="",
+        description="None"
+    )
     async def info(self, ctx):
+        """Showing full system information"""
         uname = platform.uname()
         embed = discord.Embed(
             title="================ System Information ================",
@@ -76,8 +82,14 @@ t>system {rnd.choice(options)}
             )
         return await ctx.send(embed=embed)
 
-    @system.command()
+    @system.command(
+        help="Display boot information",
+        brief="Boot Info",
+        usage="",
+        description="None"
+    )
     async def boot(self, ctx):
+        """Showing our boot information"""
         boot_time_timestamp = psutil.boot_time()
         bt = datetime.datetime.fromtimestamp(boot_time_timestamp)
         embed = discord.Embed(
@@ -91,8 +103,14 @@ t>system {rnd.choice(options)}
             )
         return await ctx.send(embed=embed)
     
-    @system.command()
+    @system.command(
+        help="Display CPU information",
+        brief="CPU Info",
+        usage="",
+        description="None"
+    )
     async def cpu(self, ctx):
+        """Showing our cpu information"""
         cpufreq = psutil.cpu_freq()
         cpu_core_data = ""
         for i, percentage in enumerate(psutil.cpu_percent(percpu=True, interval=1)):
@@ -122,8 +140,14 @@ t>system {rnd.choice(options)}
         )
         return await ctx.send(embed=embed)
 
-    @system.command()
+    @system.command(
+        help="Display memory information",
+        brief="Memory Info",
+        usage="",
+        description="None"
+    )
     async def memory(self, ctx):
+        """Showing our memory information"""
         svmem = psutil.virtual_memory() 
         embed = discord.Embed(
             title="================ Memory Information ================",
@@ -142,8 +166,14 @@ t>system {rnd.choice(options)}
         )
         return await ctx.send(embed=embed)
 
-    @system.command()
+    @system.command(
+        help="Display disk information",
+        brief="Disk Info",
+        usage="",
+        description="None"
+    )
     async def disk(self, ctx):
+        """Showing our disk information"""
         partitions = psutil.disk_partitions()
         disk_io = psutil.disk_io_counters()
         embed = discord.Embed(
