@@ -17,33 +17,33 @@ import colors
 load_dotenv()
 
 def get_prefix(bot, message):
-    """Gets the prefix from built cache, if a guild isn't found (Direct Messages) assumes prefix is the below"""
+    """Gets the prefix from built cache, if a guild isn"t found (Direct Messages) assumes prefix is the below"""
     if message.guild is None:
-        return ['t>', '>']
+        return ["t>", ">"]
     return bot.prefix_dict[str(message.guild.id)]
 
 # Bot instance
 bot = commands.Bot(
     command_prefix=get_prefix,
     intents=discord.Intents.all(),
-    activity=discord.Streaming(name='Music - t>help', url="https://www.youtube.com/watch?v=Turf7WDB3iY")
+    activity=discord.Streaming(name="Music - t>help", url="https://www.youtube.com/watch?v=Turf7WDB3iY")
 )
 
 # Cog list which we then add to bot instance
 cog_list = [
-    'devonly',
-    'help',
-    'anime',
-    'urbandictionary',
-    'other',
-    'music',
-    'unsplash',
-    'dictionary',
-    'system_info',
-    'mongodb',
-    'data',
-    'colors',
-    'moderation'
+    "devonly",
+    "help",
+    "anime",
+    "urbandictionary",
+    "other",
+    "music",
+    "unsplash",
+    "dictionary",
+    "systeminfo",
+    "mongodb",
+    "data",
+    "colors",
+    "moderation"
 ]
 
 bot.cog_list = cog_list
@@ -93,4 +93,4 @@ async def on_command(ctx):
 # Keep Alive Function
 # keep_alive.keep_alive()
 
-bot.run(os.getenv('Token'))
+bot.run(os.getenv("Token"))
