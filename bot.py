@@ -12,7 +12,7 @@ import os
 import urllib
 import time
 import asyncio
-import colors
+from colors import *
 #import keep_alive
 load_dotenv()
 
@@ -77,7 +77,7 @@ async def on_command(ctx):
             description="""Thanks for using Tenshi!
             We are adding you to our database, however please make sure you review our rules with the rules command.""",
             timestamp=dt.datetime.utcnow(),
-            color=colors.get_color(bot)
+            color=c_get_color("green")
         )
         await ctx.send(embed=embed)
         settings_format = {
