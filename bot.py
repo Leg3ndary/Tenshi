@@ -43,7 +43,8 @@ cog_list = [
     "mongodb",
     "data",
     "colors",
-    "moderation"
+    "moderation",
+    "translate"
 ]
 
 bot.cog_list = cog_list
