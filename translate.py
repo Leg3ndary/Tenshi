@@ -8,6 +8,7 @@ import discord
 from discord.ext import commands
 import datetime
 from colors import *
+import googletrans
 from googletrans import Translator
 
 
@@ -16,6 +17,18 @@ class Translation(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.translator = Translator()
+        self.bot.languages = googletrans.LANGUAGES
+        self.bot.langcodes = googletrans.LANGCODES
+
+    @commands.Cog.listener()
+    async def on_ready(self):
+        """When ready create a new cache of current languages available"""
+        lang_view = ""
+        for language in self.bot.languages.keys():
+            lang_text = f"""<{language:5} = {self.bot.languages[language]}>"""
+            lang_view = f"""{lang_view}\n{lang_text}"""
+
+        self.bot.viewlang = lang_view
 
     @commands.group()
     async def translate(self, ctx):
@@ -33,17 +46,40 @@ class Translation(commands.Cog):
             pass
 
         end = self.translator.translate(text=text, dest="en", src="auto")
-
+        data = end.extra_data
         print(end.extra_data)
         embed = discord.Embed(
-            title=None
+            title="Translation",
+            description=f"""```
+{end.text}
+```""",
+            timestamp=datetime.datetime.utcnow(),
+            color=c_random_color()
         )
-        await ctx.send(end.text)
+        
+        await ctx.send(embed=embed)
 
-    @translate.command()
+    @translate.command(
+        aliases=["c"]   
+    )
     async def complex(self, ctx, inp: str, out: str, text: str):
         """Define the input and output language"""
         pass
+
+    @translate.command(
+        aliases=["l"]
+    )
+    async def list(self, ctx):
+        """Show the list of languages you can currently use"""
+        embed = discord.Embed(
+            title="Translation Code List",
+            description=f"""```md
+{self.bot.viewlang}
+```""",
+            timestamp=datetime.datetime.utcnow(),
+            color=c_random_color()
+        )
+        await ctx.send(embed=embed)
 
     @commands.command()
     async def language(self, ctx):
