@@ -44,7 +44,8 @@ cog_list = [
     "data",
     "colors",
     "moderation",
-    "translate"
+    "translate",
+    "redis"
 ]
 
 bot.cog_list = cog_list
@@ -54,7 +55,7 @@ start = time.monotonic()
 for cog in cog_list:
     bot.load_extension(cog)
 end = time.monotonic()
-print(f"{len(cog_list)} Cogs Loaded in {(round((end - start) * 1000, 2))/1000} seconds.")
+print(f"{len(cog_list)} cogs loaded in {(round((end - start) * 1000, 2))/1000} seconds.")
 
 @bot.event
 async def on_ready():
@@ -77,7 +78,7 @@ async def on_command(ctx):
             description="""Thanks for using Tenshi!
             We are adding you to our database, however please make sure you review our rules with the rules command.""",
             timestamp=dt.datetime.utcnow(),
-            color=c_get_color("green")
+            color=c_get_color("green    ")
         )
         await ctx.send(embed=embed)
         settings_format = {
