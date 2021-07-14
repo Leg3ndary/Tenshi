@@ -6,20 +6,16 @@ This software is licensed under Creative Commons Attribution-NonCommercial-NoDer
 
 import discord
 from discord.ext import commands
-import datetime as dt
-import random as rnd
+import datetime
 import os
 import pymongo
 from bson import ObjectId
 import time
+from colors import *
 
-# Functions
-def random_hex():
-    random_number = rnd.randint(0,0xffffff)
-    return random_number
 
 def convert(seconds):
-    """Convert time"""
+    """Convert time to a human readable format"""
     ty_res = time.gmtime(seconds)
     res = time.strftime("%H hours, %M minutes and %S seconds", ty_res)
 
@@ -31,20 +27,16 @@ def get_size(bytes, suffix="B"):
             return f"{bytes:.2f}{unit}{suffix}"
         bytes /= factor
 
-username = os.getenv('MongoUser')
-password = os.getenv('MongoPass')
-
-pymongo_client = pymongo.MongoClient(f"mongodb+srv://{username}:{password}@tenshi-cluster.bvwvs.mongodb.net/tenshi_db?retryWrites=true&w=majority")
+pymongo_client = pymongo.MongoClient(f"mongodb+srv://{os.getenv('MongoUser')}:{os.getenv('MongoPass')}@tenshi-cluster.bvwvs.mongodb.net/database?retryWrites=true&w=majority")
 
 # Database Retrieval
-tenshi_db = pymongo_client["tenshi_db"]
+database = pymongo_client["database"]
 admin_client = pymongo_client["admin"]
 server_user_db = pymongo_client["server_user_db"]
 admin_client = pymongo_client["admin"]
 
 # Collection(s) retrieval
-todolist = tenshi_db["todolist"]
-blacklist = tenshi_db["blacklist"]
+todolist = database["todolist"]
 server_settings = server_user_db["server"]
 user_settings = server_user_db["user"]
 
@@ -62,21 +54,7 @@ for user in user_settings.find():
             "embed_colors": user["embed_colors"]
             }})
 
-# Returning a list with all blacklisted 
-# Updating and retrieving blacklist data
-async def update_bl():
-    blacklist_list = []
-    for user in blacklist.find():
-        blacklist_list.append(user["id"])
-    print(f"Updated Blacklist List...\nAdding to Bot Instance")
-    return blacklist_list
 
-# fix this later use cache
-def format_bl():
-    blacklist_data = ""
-    for user in blacklist.find():
-        blacklist_data = f"{blacklist_data}\n- {user['id']} - {user['_id']} -"
-    return blacklist_data
 
 class MongoDB(commands.Cog):
     """Interactions with our database"""
@@ -86,14 +64,11 @@ class MongoDB(commands.Cog):
     # DevOnly Methods
     @commands.Cog.listener()
     async def on_ready(self):
-        """creating Caches and stuff"""
-        b_start = time.monotonic()
-        self.bot.blacklist = await update_bl()
-        b_end = time.monotonic()
-        print(f"Blacklist Retrieved in {(round((b_end - b_start) * 1000, 2))/1000} seconds.")
+        """Doing stuff on_ready"""
+
         self.bot.prefix_dict = prefix_dict
         self.bot.user_dict = user_dict
-        print("Added Prefix and User Cache.")
+
         
         # Horrible ass method to do stuff... Fix this later please
         guild_list = []
@@ -159,8 +134,8 @@ class MongoDB(commands.Cog):
 {database_list}
 ```
             **{len(databases)}** databases currently loaded in cluster.""",
-            timestamp=dt.datetime.utcnow(),
-            color=random_hex()
+            timestamp=datetime.datetime.utcnow(),
+            color=c_random_color()
         )
         return await ctx.send(embed=embed_db)
 
@@ -173,8 +148,8 @@ class MongoDB(commands.Cog):
                 description=f"""```diff
 - Database {db} not found
 ```""",
-                timestamp=dt.datetime.utcnow(),
-                color=random_hex()
+                timestamp=datetime.datetime.utcnow(),
+                color=c_random_color()
             )
             return await ctx.send(embed=embed_error)
         database = pymongo_client[db]
@@ -187,14 +162,14 @@ class MongoDB(commands.Cog):
 {collection_list}
 ```
             **{len(database.list_collection_names())}** collections currently loaded in `{db}`.""",
-            timestamp=dt.datetime.utcnow(),
-            color=random_hex()
+            timestamp=datetime.datetime.utcnow(),
+            color=c_random_color()
         )
         return await ctx.send(embed=embed_col)
 
     @cloud.group()
     async def stats(self, ctx):
-        if ctx.invoked_subcommand is None:
+        if not ctx.invoked_subcommand:
             return
 
     @stats.command(aliases=['serverstats'])
@@ -205,12 +180,12 @@ class MongoDB(commands.Cog):
                 description=f"""```diff
 - Database {db} not found
 ```""",
-                timestamp=dt.datetime.utcnow(),
-                color=random_hex()
+                timestamp=datetime.datetime.utcnow(),
+                color=c_random_color()
             )
             return await ctx.send(embed=embed_error)
-        if db.lower() in ['tenshi_db']:
-            data = tenshi_db.command("serverStatus")
+        if db.lower() in ['database']:
+            data = database.command("serverStatus")
 
         embed = discord.Embed(
             title="Tenshi MongoDB Statistics",
@@ -228,8 +203,8 @@ class MongoDB(commands.Cog):
 = Data Sent: {get_size(data['network']['bytesOut'])} =
 = Total Requests: {data['network']['numRequests']} =
 ```""",
-            timetstamp=dt.datetime.utcnow(),
-            color=random_hex()
+            timetstamp=datetime.datetime.utcnow(),
+            color=c_random_color()
         )
         return await ctx.send(embed=embed)
 
@@ -241,12 +216,12 @@ class MongoDB(commands.Cog):
                 description=f"""```diff
 - Database {db} not found
 ```""",
-                timestamp=dt.datetime.utcnow(),
-                color=random_hex()
+                timestamp=datetime.datetime.utcnow(),
+                color=c_random_color()
             )
             return await ctx.send(embed=embed_error)
-        if db.lower() in ['tenshi_db']:
-            data = tenshi_db.command("dbStats")
+        if db.lower() in ['database']:
+            data = database.command("dbStats")
         embed = discord.Embed(
             title=f"{db} Database Storage",
             description=f"""```asciidoc
@@ -259,44 +234,11 @@ class MongoDB(commands.Cog):
 [ Total Object Size ]
 = {get_size(data['dataSize'])} =
 ```""",
-            timestamp=dt.datetime.utcnow(),
-            color=random_hex()
+            timestamp=datetime.datetime.utcnow(),
+            color=c_random_color()
         )
         return await ctx.send(embed=embed)
-    
-    @commands.group(aliases=['todolist'])
-    @commands.is_owner()
-    async def tdl(self, ctx):
-        if ctx.invoked_subcommand is None:
-            return
-
-    @tdl.command()
-    async def add(self, ctx, *, args):
-        tdl_dict = { "Task": f"{args}" }
-        tdl_data = todolist.insert_one(tdl_dict)
-        embed = discord.Embed(
-            title="Task Added",
-            description=f"""ID: `{tdl_data.inserted_id}`
-```
-{args}
-```""",
-            timestamp=dt.datetime.utcnow(),
-            color=random_hex()
-        )
-        return await ctx.send(embed=embed)
-    
-    @tdl.command()
-    async def list(self, ctx):
-        for item in todolist.find():
-            await ctx.send(item)
-
-    @tdl.command()
-    async def remove(self, ctx, id):
-        id_query = { '_id': ObjectId(id)}
-        todolist.delete_one(id_query)
-        await ctx.send('finished, deleted')
 
 
-# Adding the Cog
 def setup(bot):
     bot.add_cog(MongoDB(bot))
