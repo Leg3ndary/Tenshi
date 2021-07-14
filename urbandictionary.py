@@ -47,15 +47,12 @@ def gen_embed(data):
     embed.set_author(
         name=f"""Author: {data["author"]}"""
     )
-
-    print('3')
     embed.add_field(
         name=f"""Votes""",
         value=f"""{thumbs_up} {data["thumbs_up"]:,}
         {thumbs_down} {data["thumbs_down"]:,}""",
         inline=False
     )
-    print('4')
     return embed
 
 class UrbanMenu(menus.Menu):
