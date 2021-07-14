@@ -45,7 +45,8 @@ cog_list = [
     "colors",
     "moderation",
     "translate",
-    "redis"
+    "redis",
+    "errorhandler"
 ]
 
 bot.cog_list = cog_list
