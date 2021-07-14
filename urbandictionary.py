@@ -125,26 +125,6 @@ class UrbanDictionary(commands.Cog):
         dmenu = UrbanMenu(data)
         await dmenu.start(ctx)
 
-    @urban.error
-    async def urban_error(self, ctx, error):
-        """If we encounter some error of some kind"""
-        if isinstance(error, commands.CommandOnCooldown):
-            cooldown_embed = discord.Embed(
-                title=f"Urbandictionary is on Cooldown",
-                description=f"""Try again in {error.retry_after:.2f} seconds.""", 
-                timestamp = datetime.datetime.utcnow(),
-                color=c_get_color("red")
-            )
-            return await ctx.send(embed=cooldown_embed)
-        elif isinstance(error, commands.errors.NSFWChannelRequired):
-            embed_nsfw = discord.Embed(
-                title='Nsfw',
-                description='Urban Dictionary can contain NSFW posts so this command may only be run in NSFW channels.',
-                timstamp=datetime.datetime.utcnow(),
-                color=c_get_color("red")
-                )
-            return await ctx.send(embed=embed_nsfw)
-
 
 def setup(bot):
     bot.add_cog(UrbanDictionary(bot))
