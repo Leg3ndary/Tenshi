@@ -12,7 +12,7 @@ import os
 import urllib
 import time
 import asyncio
-from colors import *
+from cogs.colors import *
 #import keep_alive
 load_dotenv()
 
