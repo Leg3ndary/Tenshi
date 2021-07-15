@@ -46,10 +46,13 @@ cog_list = [
     "moderation",
     "translate",
     "redis",
-    "errorhandler"
+    "errorhandler",
+    "exalia"
 ]
 
 bot.cog_list = cog_list
+#bot.loop = asyncio.get_event_loop()
+# We don't need this rn
 
 # Just showing how long it takes the cog to load
 start = time.monotonic()
@@ -57,6 +60,7 @@ for cog in cog_list:
     bot.load_extension(cog)
 end = time.monotonic()
 print(f"{len(cog_list)} cogs loaded in {(round((end - start) * 1000, 2))/1000} seconds.")
+
 
 @bot.event
 async def on_ready():
