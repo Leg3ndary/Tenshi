@@ -8,7 +8,7 @@ import discord
 from discord.ext import commands
 import datetime as dt
 from dotenv import load_dotenv
-import os   
+import os
 import urllib
 import time
 import asyncio
@@ -31,23 +31,23 @@ bot = commands.Bot(
 
 # Cog list which we then add to bot instance
 cog_list = [
-    "devonly",
-    "help",
-    "anime",
-    "urbandictionary", # Done
-    "other",
-    "music",
-    "unsplash",
-    "dictionary",
-    "systeminfo", # Done
-    "mongodb",
-    "data",
-    "colors",
-    "moderation",
-    "translate",
-    "redis",
-    "errorhandler",
-    "exalia"
+    "cogs.devonly",
+    "cogs.help",
+    "cogs.anime",
+    "cogs.urbandictionary", # Done
+    "cogs.other",
+    "cogs.music",
+    "cogs.unsplash",
+    "cogs.dictionary",
+    "cogs.systeminfo", # Done
+    "cogs.mongodb",
+    "cogs.data",
+    "cogs.colors",
+    "cogs.moderation",
+    "cogs.translate",
+    "cogs.redis",
+    "cogs.errorhandler",
+    "cogs.exalia.exalia"
 ]
 
 bot.cog_list = cog_list
