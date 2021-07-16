@@ -81,7 +81,8 @@ class_value = {
     }
 }
 
-def is_new():
+
+def is_registered():
     """Check if the id has an account made (If this user has started)"""
     async def predicate(ctx):
         data = await bal.find_one({
@@ -123,6 +124,30 @@ class Exalia(commands.Cog):
     """Currency commands related to Exalia"""
     def __init__(self, bot):
         self.bot = bot
+
+    @commands.group()
+    @commands.is_owner()
+    async def exalia(self, ctx):
+        """Managing things in our database related to exalia"""
+        if not ctx.invoked_subcommamd:
+            return await ctx.send_help("exalia")
+
+    @exalia.command()
+    async def drop(self, ctx, collection):
+        """Delete a document from a collection"""
+
+        if collection.lower() in ["bal", "balance"]:
+            col = bal
+
+        if collection.lower() in ["data"]:
+            col = data
+
+        if collection.lower() in ["inv", "inventory"]:
+            col = inv
+
+        
+        await col.delete_one()
+
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -286,33 +311,51 @@ class Exalia(commands.Cog):
         await data.insert_one(data_template)
 
     @commands.command()
-    @is_new()
+    @is_registered()
+    @commands.cooldown(1, 30, commands.BucketType.user)
     async def profile(self, ctx, user: discord.Member = None):
         """View another user or your own profile"""
         if not user:
             user = ctx.author
 
+        data_d = data.find_one({
+            "_id": str(user.id)
+        })
+        bal_d = await bal.find_one({
+            "_id": str(ctx.author.id)
+        })
+
+        embed = discord.Embed(
+           title=f"{ctx.author.display_name}'s Profile",
+           description=f"""""",
+           timestamp=datetime.datetime.utcnow(),
+           color=c_random_color()
+        )
+        await ctx.send(embed=embed)
+
+
     @commands.command(
         aliases=["bal"]
     )
-    @is_new()
+    @is_registered()
+    @commands.cooldown(1, 30, commands.BucketType.user)
     async def balance(self, ctx):
         """View your own balance"""
-        data = await bal.find_one({
+        bal_d = await bal.find_one({
             "_id": str(ctx.author.id)
         })
 
         embed = discord.Embed(
             title=f"""{ctx.author.display_name}'s Balance""",
-            description=f"""{coin} {data["coins"]:,}
-            {gem} {data["gems"]:,}""",
+            description=f"""{coin} {bal_d["coins"]:,}
+            {gem} {bal_d["gems"]:,}""",
             timestamp=datetime.datetime.utcnow(),
             color=c_random_color()
         )
-        return await ctx.send(embed=embed)
+        await ctx.send(embed=embed)
 
     @commands.command()
-    @is_new()
+    @is_registered()
     @commands.cooldown(1, 30, commands.BucketType.user)
     async def work(self, ctx):
         """Work for some coins :L"""
@@ -336,7 +379,7 @@ class Exalia(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    @is_new()
+    @is_registered()
     @commands.cooldown(1, 30, commands.BucketType.user)
     async def hunt(self, ctx):
         """Hunt for some coins/animals"""
