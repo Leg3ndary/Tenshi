@@ -137,3 +137,53 @@ Battles will always have at max 5 turns (Each turn consists of you attacking and
 or 
 - Loss
 ```
+
+# Weapons/Items/Collectables
+In Exalia items are split into 3 types, remember every items can be sold and or traded to other players.
+
+## Collectables
+Don't do anything, merely for self pleasure or trading.
+
+These aren't all useless though!
+
+In special events and or a future stock market, you'll be able to use these to earn some extra coins and gems!
+
+
+## Items
+Will always have a usable function, also known as consumable
+
+Usually gives some sort of stat or new command.
+
+
+## Weapons
+Armor falls under this class, anything that will be used in battle for offence or defense.
+
+Each weapon has 4 (Technically 3) stats for battle:
+
+1. Type
+    - Meelee, Ranged, Magic
+        - Meelee will use your regular attack points as damage.
+        - Ranged will use your regular attack points as damage however you will not have any defence, however generally ranged weapons will be stronger.
+        - Magic will use your magic power as damage, in addition to that you will usually have bonus effects at the cost of an overall weaker weapon
+
+2. Effects
+    - Effects your weapon might have, meelee weapons might have one, ranged will almost never have one, magic will always have one
+    - Listed below are all the possible effects in a table
+    - Each effect will have an I, II, or III level, this will multiply the effects power by its respective level, this is unchangeable.
+
+| Effect | Description (Remember every turn consists of you attacking **and** defending) |
+|--- | --- |
+| Fire | For 2 turns your enemy will take 2 points of damage each turn |
+| Poison | For 5 turns your enemy will take 1 point of damage each turn |
+| Spikes | For 3 turns your enemy will take 1 point of damage |
+| Lucky Shot | Have a 5% chance of inflicting **double** damage. Chance increases per level |
+| Paralysis | Have a 5% chance of making the enemy miss a turn |
+| Lifesteal | Have a 5% chance of stealing half of your attack points health from your enemy |
+
+3. Secondary Effect
+A bonus second effect you might get for your weapon
+
+4. Attachment
+Almost like another effect, all weapons have an equal chance of having one.
+
+However this is predetermined and also cannot be changed

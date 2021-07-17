@@ -8,6 +8,7 @@ import discord
 from discord.ext import commands
 import datetime 
 from cogs.colors import *
+from cogs.exalia.inventory import *
 import os
 import time
 import asyncio
@@ -23,7 +24,6 @@ users = exalia_client["users"]
 bal = users["bal"]
 data = users["data"]
 inv = users["inv"]
-
 
 coin = "<a:tcoin:864926193878040577>"
 gem = "<a:tgem:864926382424588289>"
@@ -385,6 +385,16 @@ class Exalia(commands.Cog):
         """Hunt for some coins/animals"""
         pass
 
+    @commands.command()
+    @is_registered()
+    @commands.cooldown(3, 30, commands.BucketType.user)
+    async def shop(self, ctx, search):
+        """Check out the shop with a page or item search"""
+        if search.is_digit():
+            # search was an int, check page
+            pass
+        else:
+            pass
 
 def setup(bot):
     bot.add_cog(Exalia(bot))
