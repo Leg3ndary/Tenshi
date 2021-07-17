@@ -10,13 +10,13 @@ from cogs.colors import *
 
 '''
 Example for command help formats
-@commands.command(
-    name="Command Name", <== Optional 
-    help="We treat this as a small description",
-    brief="Title of Help Embed", 
-    usage="MD formatting for usage",
-    description="Extra Info About the command"
-)
+    @commands.command(
+        name="Command Name", <== Optional 
+        help="We treat this as a small description",
+        brief="Title of Help Embed", 
+        usage="MD formatting for usage",
+        description="Extra Info About the command"
+    )
 '''
 
 
