@@ -181,9 +181,7 @@ Each weapon has 4 (Technically 3) stats for battle:
 | Lifesteal | Have a 5% chance of stealing half of your attack points health from your enemy |
 
 3. Secondary Effect
-A bonus second effect you might get for your weapon
+A bonus second effect you might get for your weapon, literally just a second effect from the list above
 
-4. Attachment
-Almost like another effect, all weapons have an equal chance of having one.
-
-However this is predetermined and also cannot be changed
+4. Attack
+- An additional attack damage to add to every attack minimum 1

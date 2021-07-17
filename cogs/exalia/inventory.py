@@ -4,13 +4,9 @@ Copyright (C) 2021 Ben Z.
 This software is licensed under Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)
 """
 
-import discord
-from discord.ext import commands
 import datetime 
 from cogs.colors import *
 import os
-import time
-import asyncio
 import motor.motor_asyncio
 
 exalia_client = motor.motor_asyncio.AsyncIOMotorClient(
@@ -26,29 +22,77 @@ inv = users["inv"]
 Simple file so we can organize inventories and items and how they work...
 """
 
-# Default Items can have a common up to epic rarity
-default_items = {
+# Default Items basically
+common_items = {
     "1": {
-        "name": "Sword",
+        "name": "Wooden Sword",
+        "rarity": "common",
         "cost": 10,
         "sell": 1,
-        "type"
-        "stats": {}
+        "type": "meelee",
+        "attack": 1,
+        "effects": [],
+    },
+    "2": {
+        "name": "Wooden Bow",
+        "rarity": "common",
+        "cost": 10,
+        "sell": 1,
+        "type": "ranged",
+        "attack": 2,
+        "effects": [],
+    },
+    "3": {
+        "name": "Wooden Staff",
+        "rarity": "common",
+        "cost": 10,
+        "sell": 1,
+        "type": "magic",
+        "attack": 1,
+        "effects": [],
     }
 }
 
+# Rare items
+rare_items = {
+    "1": {
+        "name": "Iron Sword",
+        "rarity": "rare",
+        "cost": 25,
+        "sell": 5,
+        "type": "meelee",
+        "attack": 3,
+        "effects": [],
+    },
+    "2": {
+       "name": "Iron Bow",
+        "rarity": "rare",
+        "cost": 25,
+        "sell": 5,
+        "type": "ranged",
+        "attack": 5,
+        "effects": [],
+    },
+    "3": {
+        "name": "Iron Staff",
+        "rarity": "rare",
+        "cost": 25,
+        "sell": 5,
+        "type": "magic",
+        "attack": 2,
+        "effects": [],
+    }
+}
+
+# Epic rarity
+epic_items = {
+
+}
 
 # Legendary Items :D
 legendary_items = {
 
 }
-
-
-# Mythical Items
-mythical_items = {
-
-}
-
 
 # Not actually unobtainable, just to make it sound cool
 unobtainable_items = {
@@ -61,17 +105,24 @@ effects = {
 }
 
 
-"""Turning this into an async function just cuz"""
+
 async def i_get_item_data(item_id: str, rarity: str):
     """Retrieve the given items data, including drop rate, stats, what it does, you get the gist"""
-    if rarity.lower() in ["common", "uncommon", "rare", "epic"]:
-        item_dict = default_items
+    # The lowers aren't technically needed but its a precaution
+    if rarity.lower() == "common":
+        item_dict = common_items
+
+    elif rarity.lower() == "rare":
+        item_dict = rare_items
+
+    elif rarity.lower() == "epic":
+        item_dict = epic_items
     
     elif rarity.lower() == "legendary":
         item_dict = legendary_items
 
-    elif rarity.lower() == "mythical":
-        item_dict = mythical_items
+    elif rarity.lower() == "unobtainable":
+        item_dict = unobtainable_items
 
     else:
         item_dict = unobtainable_items
@@ -89,3 +140,10 @@ async def i_get_item_data(item_id: str, rarity: str):
         }
 
     return item_data
+
+
+async def i_add_item(id: str, item_id: str, rarity: str, amount: int=1):
+    """Add an item to a user"""
+
+async def i_del_item(id: str, item_id: str, rarity: str, amount: int=1):
+    """Removes an item from a user"""
