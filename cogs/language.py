@@ -147,7 +147,7 @@ class Language(commands.Cog):
 
     @commands.group()
     async def translate(self, ctx):
-        """Translating the given text"""
+        """Translating the given text with certain options"""
         if not ctx.invoked_subcommand:
             embed = discord.Embed(
                 title="Imagine",
@@ -158,7 +158,11 @@ class Language(commands.Cog):
             return await ctx.send(embed=embed)
     
     @translate.command(
-        aliases=["a"]
+        aliases=["a"],
+        help="Auto detect the language and attempt to translate it",
+        brief="Auto Translate", 
+        usage="<Text>",
+        description=""
     )
     async def auto(self, ctx, *, text: str = None):
         """Automatically detect the language and output it in english"""
@@ -181,7 +185,11 @@ class Language(commands.Cog):
         await ctx.send(embed=embed)
 
     @translate.command(
-        aliases=["c"]   
+        aliases=["c"],
+        help="Run a complex translation using an input and output language",
+        brief="Complex Translate", 
+        usage="<Input Language> <Output Language> <Text>",
+        description="Use the translate list command to view possible translation codes"
     )
     async def complex(self, ctx, inp: str, out: str, *, text: str=None):
         """Define the input and output language"""
@@ -190,8 +198,7 @@ class Language(commands.Cog):
             pass
 
         end = self.translator.translate(text=text, dest=out, src=inp)
-        data = end.extra_data
-        print(end.extra_data)
+        #print(end.extra_data) Update later
         embed = discord.Embed(
             title="Translation",
             description=f"""```
@@ -204,8 +211,13 @@ class Language(commands.Cog):
         await ctx.send(embed=embed)
 
     @translate.command(
-        aliases=["l"]
+        aliases=["l"],
+        help="List all possible translation codes",
+        brief="Translation Code List", 
+        usage="",
+        description="This command is only usable in dms for spam reasons"
     )
+    @commands.dm_only()
     async def list(self, ctx):
         """Show the list of languages you can currently use"""
         embed = discord.Embed(
@@ -223,7 +235,13 @@ class Language(commands.Cog):
         """Posts an embed giving reasons as to why we can't translate"""
         pass
 
-    @commands.command(aliases=["dict"])
+    @commands.command(
+        aliases=["dict"],
+        help="Search a regular dictionary for the meaning of a word.",
+        brief="Dictionary Search", 
+        usage="<Word>",
+        description=""
+    )
     @commands.cooldown(2.0, 6.0, commands.BucketType.user)
     async def dictionary(self, ctx, word: str):
         data = await d_get_word('en_US', word)
