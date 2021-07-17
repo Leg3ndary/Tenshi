@@ -34,17 +34,15 @@ cog_list = [
     "cogs.devonly",
     "cogs.help",
     "cogs.anime",
-    "cogs.urbandictionary", # Done
     "cogs.other",
     "cogs.music",
     "cogs.unsplash",
-    "cogs.dictionary",
     "cogs.systeminfo", # Done
     "cogs.mongodb",
     "cogs.data",
     "cogs.colors",
     "cogs.moderation",
-    "cogs.translate",
+    "cogs.language",
     "cogs.redis",
     "cogs.errorhandler",
     "cogs.exalia.exalia"
