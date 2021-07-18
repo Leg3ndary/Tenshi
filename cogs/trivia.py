@@ -1,3 +1,8 @@
+"""
+Tenshi Discord Bot
+Copyright (C) 2021 Ben Z.
+This software is licensed under Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)
+"""
 
 import discord
 from discord.ext import commands
@@ -30,7 +35,6 @@ def random_hex():
     random_number = rnd.randint(0,0xffffff)
     return(random_number)
     
-# Cog Setup
 class Trivia(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
