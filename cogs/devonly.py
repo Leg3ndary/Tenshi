@@ -226,6 +226,137 @@ class DevOnly(commands.Cog):
         await ctx.send(embed=embed)
 
     @dev.group()
+    async def status(self, ctx):
+        """Set a status for the bot"""
+        if not ctx.invoked_subcommand:
+            await ctx.send_help("dev status")
+
+    @status.command()
+    async def playing(self, ctx, *, status:str):
+        """Set a playing status"""
+        try:
+            await self.bot.change_presence(activity=discord.Game(name=status))
+            embed = discord.Embed(
+               title="Status Changed",
+               description=f"""Changed successfully.""",
+               timestamp=datetime.datetime.utcnow(),
+               color=c_get_color("green")
+            )
+            await ctx.send(embed=embed)
+        
+        except Exception as e:
+            embed_error = discord.Embed(
+               title="Status Change Fail",
+               description=f"""Failed
+```diff
+- {e}
+```""",
+               timestamp=datetime.datetime.utcnow(),
+               color=c_get_color("red")
+            )
+            await ctx.send(embed=embed_error)
+
+    @status.command()
+    async def streaming(self, ctx, url: str, *, status: str):
+        """Set a streaming status"""
+        try:
+            await self.bot.change_presence(activity=discord.Streaming(name=status, url=url))
+            embed = discord.Embed(
+               title="Status Changed",
+               description=f"""Changed successfully.""",
+               timestamp=datetime.datetime.utcnow(),
+               color=c_get_color("green")
+            )
+            await ctx.send(embed=embed)
+        
+        except Exception as e:
+            embed_error = discord.Embed(
+               title="Status Change Fail",
+               description=f"""Failed
+```diff
+- {e}
+```""",
+               timestamp=datetime.datetime.utcnow(),
+               color=c_get_color("red")
+            )
+            await ctx.send(embed=embed_error)
+    
+    @status.command()
+    async def listening(self, ctx, *, status: str):
+        """Set a listening status"""
+        try:
+            await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=status))
+            embed = discord.Embed(
+               title="Status Changed",
+               description=f"""Changed successfully.""",
+               timestamp=datetime.datetime.utcnow(),
+               color=c_get_color("green")
+            )
+            await ctx.send(embed=embed)
+        
+        except Exception as e:
+            embed_error = discord.Embed(
+               title="Status Change Fail",
+               description=f"""Failed
+```diff
+- {e}
+```""",
+               timestamp=datetime.datetime.utcnow(),
+               color=c_get_color("red")
+            )
+            await ctx.send(embed=embed_error)
+    
+    @status.command()
+    async def competing(self, ctx, *, status: str):
+        """Set a competing status"""
+        try:
+            await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.competing, name=status))
+            embed = discord.Embed(
+               title="Status Changed",
+               description=f"""Changed successfully.""",
+               timestamp=datetime.datetime.utcnow(),
+               color=c_get_color("green")
+            )
+            await ctx.send(embed=embed)
+        
+        except Exception as e:
+            embed_error = discord.Embed(
+               title="Status Change Fail",
+               description=f"""Failed
+```diff
+- {e}
+```""",
+               timestamp=datetime.datetime.utcnow(),
+               color=c_get_color("red")
+            )
+            await ctx.send(embed=embed_error)
+
+    @status.command()
+    async def watching(self, ctx, *, status: str):
+        """Set a watching status"""
+        try:
+            await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=status))
+            embed = discord.Embed(
+               title="Status Changed",
+               description=f"""Changed successfully.""",
+               timestamp=datetime.datetime.utcnow(),
+               color=c_get_color("green")
+            )
+            await ctx.send(embed=embed)
+        
+        except Exception as e:
+            embed_error = discord.Embed(
+               title="Status Change Fail",
+               description=f"""Failed
+```diff
+- {e}
+```""",
+               timestamp=datetime.datetime.utcnow(),
+               color=c_get_color("red")
+            )
+            await ctx.send(embed=embed_error)
+
+    @dev.group()
     async def cache(self, ctx):
         """Recacheing Users, Prefixes, or Guilds"""
         if ctx.invoked_subcommand is None:
