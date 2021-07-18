@@ -8,7 +8,7 @@ import discord
 from discord.ext import commands
 import datetime
 import os
-import pymongo
+import motor.motor_asyncio
 import time
 from cogs.colors import *
 
@@ -19,7 +19,7 @@ def convert(seconds):
     res = time.strftime("%H hours, %M minutes and %S seconds", ty_res)
 
 def get_size(bytes, suffix="B"):
-    """Return size given bytes"""
+    """Return human readable size"""
     factor = 1024
     for unit in ["", "K", "M", "G", "T", "P"]:
         if bytes < factor:
@@ -27,90 +27,83 @@ def get_size(bytes, suffix="B"):
         bytes /= factor
 
 
-pymongo_client = pymongo.MongoClient(f"mongodb+srv://{os.getenv('MongoUser')}:{os.getenv('MongoPass')}@tenshi-cluster.bvwvs.mongodb.net/database?retryWrites=true&w=majority")
+motor_client = motor.motor_asyncio.AsyncIOMotorClient(f"mongodb+srv://{os.getenv('MongoUser')}:{os.getenv('MongoPass')}@tenshi-cluster.bvwvs.mongodb.net/database?retryWrites=true&w=majority")
 
 # Database Retrieval
-database = pymongo_client["database"]
-admin_client = pymongo_client["admin"]
-server_user_db = pymongo_client["server_user_db"]
-admin_client = pymongo_client["admin"]
+database = motor_client["database"]
+server_db = motor_client["server"]
+user_db = motor_client["user"]
+admin_db = motor_client["admin"]
 
 # Collection(s) retrieval
-todolist = database["todolist"]
-server_settings = server_user_db["server"]
-user_settings = server_user_db["user"]
+prefixes = server_db["prefixes"]
+user_settings = user_db["users"]
 
-prefix_dict = {}
-user_dict = {}
-
-for prefix_list in server_settings.find():
-    prefix_dict.update({str(prefix_list["_id"]): prefix_list["prefixes"]})  
-for user in user_settings.find():
-    user_dict.update({
-        str(user["_id"]): {
-            "supporter": user["supporter"],
-            "accepted_rules": user["accepted_rules"],
-            "dm_updates": user["dm_updates"],
-            "embed_colors": user["embed_colors"]
-            }})
-
+prefix_cache = {}
 
 
 class MongoDB(commands.Cog):
     """Interactions with MongoDB"""
     def __init__(self, bot):
         self.bot = bot
-    
-    # DevOnly Methods
+
     @commands.Cog.listener()
     async def on_ready(self):
-        """Doing stuff on_ready"""
+        """Setting up prefix cache"""
 
         start = time.monotonic()
-        self.bot.prefix_dict = prefix_dict
-        self.bot.user_dict = user_dict
+        cursor = prefixes.find()
+        for prefix in await cursor.to_list(length=len(self.bot.guilds)):
+            prefix_cache.update({str(prefix["_id"]): prefix["prefixes"]})
 
+        self.bot.prefix_cache = prefix_cache
         
-        # Horrible ass method to do stuff... Fix this later please
-        
+        start = time.monotonic()
+
+        # We need everything in a string format
         guild_list = []
         for guild in self.bot.guilds:
             guild_list.append(str(guild.id))
 
-        print(f"{len(guild_list)} servers retrieved from discord.")
+        print(f"{len(guild_list)} servers joined.")
 
-        for guild_setting in server_settings.find():
+        cursor = prefixes.find()
+        # Going through our prefix list and checking for unadded guilds
+        for prefix in await cursor.to_list(length=len(self.bot.guilds)):
             try:
-                guild_list.remove(str(guild_setting["_id"]))
+                guild_list.remove(str(prefix["_id"]))
             except:
+                # Just in case
                 pass
 
-        if len(guild_list)-len(guild_list) != len(guild_list):
-            print(f"{len(guild_list)} servers not in server_settings, adding them...")
-            
+        if len(guild_list) > 0:
+            print(f"{len(guild_list)} servers not detected in prefixes, adding.")
+
             for guild_na in guild_list:
-                server_dict = {
+                prefix_insert = {
                     "_id": str(guild_na),
-                    "prefixes": ['t>', '>'],
-                    "update_channel": None
+                    "prefixes": ["t>"]
                 }
-                server_settings.insert_one(server_dict)
-                self.bot.prefix_dict[str(guild_na)] = server_dict
-            print('Finished adding server_settings.')
+                self.bot.prefix_cache[str(guild_na)] = prefix_insert["prefixes"]
+                await prefixes.insert_one(prefix_insert)
+
+            print(f"Finished adding {len(guild_list)} to prefixes.")
         else:
-            print("No guilds not detected in server_settings, proceeding.")
+            print("No guilds not detected in prefixes.")
+        
+        end = time.monotonic()
+
+        print(f"{len(prefix_cache)} prefixes in prefixes cache loaded in {(round((end - start) * 1000, 2))/1000} seconds.")
 
     @commands.Cog.listener()
-    # Also a horrible method, please fix
     async def on_guild_join(self, guild):
-        server_dict = {
+        """On guild join insert the prefix to our db and add to cache"""
+        prefix_insert = {
             "_id": str(guild.id),
-            "prefixes": ['t>', '>'],
-            "update_channel": None
+            "prefixes": ["t>"],
         }
-        server_settings.insert_one(server_dict)
-        self.bot.prefix_dict[str(guild.id)] = server_dict
-    
+        self.bot.prefix_cache[str(guild.id)] = prefix_insert["prefixes"]
+        await prefixes.insert_one(prefix_insert)
 
     @commands.group()
     @commands.is_owner()
@@ -124,12 +117,13 @@ class MongoDB(commands.Cog):
     )
     async def showdb(self, ctx):
         """List databases currently in our database"""
-        databases = pymongo_client.list_database_names()
+        databases = await motor_client.list_database_names()
         database_list = ""
 
         for db in databases:
             database_list = f"{database_list}\n+ {db}"
-        embed_db = discord.Embed(
+
+        embed = discord.Embed(
             title="Listing Databases",
             description=f"""```diff
 {database_list}
@@ -138,55 +132,61 @@ class MongoDB(commands.Cog):
             timestamp=datetime.datetime.utcnow(),
             color=c_random_color()
         )
-        return await ctx.send(embed=embed_db)
+        await ctx.send(embed=embed)
 
     @cloud.command(aliase=["showcollections", "showcollection"])
     async def showcol(self, ctx, db):
         """Showing Collections"""
-        if db not in pymongo_client.list_database_names():
+        if db not in await motor_client.list_database_names():
             embed_error = discord.Embed(
-                title="Command Error",
+                title="Error",
                 description=f"""```diff
 - Database {db} not found
 ```""",
                 timestamp=datetime.datetime.utcnow(),
-                color=c_random_color()
+                color=c_get_color("red")
             )
             return await ctx.send(embed=embed_error)
-        database = pymongo_client[db]
+
+        database_shiz = motor_client[db]
         collection_list = ""
-        for col in database.list_collection_names():
+
+        for col in await database_shiz.list_collection_names():
             collection_list = f"{collection_list}\n+ {col}"
-        embed_col = discord.Embed(
+
+        embed = discord.Embed(
             title="Listing Databases",
             description=f"""```diff
 {collection_list}
 ```
-            **{len(database.list_collection_names())}** collections currently loaded in `{db}`.""",
+            **{len(await database.list_collection_names())}** collections currently loaded in `{db}`.""",
             timestamp=datetime.datetime.utcnow(),
             color=c_random_color()
         )
-        return await ctx.send(embed=embed_col)
+        await ctx.send(embed=embed)
 
     @cloud.group()
     async def stats(self, ctx):
+        """Show stats about our db..."""
         if not ctx.invoked_subcommand:
-            return
+            await ctx.send_help("stats")
 
     @stats.command(aliases=['serverstats'])
-    async def serverstatus(self, ctx, db):    
-        if db.lower() not in pymongo_client.list_database_names():
+    async def serverstatus(self, ctx, db):
+        """Show our mongodb server status"""  
+        if db.lower() not in await motor_client.list_database_names():
             embed_error = discord.Embed(
-                title="Command Error",
+                title="Error",
                 description=f"""```diff
 - Database {db} not found
 ```""",
                 timestamp=datetime.datetime.utcnow(),
-                color=c_random_color()
+                color=c_get_color("red")
             )
             return await ctx.send(embed=embed_error)
+
         if db.lower() in ['database']:
-            data = database.command("serverStatus")
+            data = await database.command("serverStatus")
 
         embed = discord.Embed(
             title="Tenshi MongoDB Statistics",
@@ -207,22 +207,23 @@ class MongoDB(commands.Cog):
             timetstamp=datetime.datetime.utcnow(),
             color=c_random_color()
         )
-        return await ctx.send(embed=embed)
+        await ctx.send(embed=embed)
 
     @stats.command()
     async def storage(self, ctx, db):
-        if db.lower() not in pymongo_client.list_database_names():
+        if db.lower() not in await motor_client.list_database_names():
             embed_error = discord.Embed(
-                title="Command Error",
+                title="Error",
                 description=f"""```diff
 - Database {db} not found
 ```""",
                 timestamp=datetime.datetime.utcnow(),
-                color=c_random_color()
+                color=c_get_color("red")
             )
             return await ctx.send(embed=embed_error)
+
         if db.lower() in ['database']:
-            data = database.command("dbStats")
+            data = await database.command("dbStats")
 
         embed = discord.Embed(
             title=f"{db} Database Storage",
@@ -239,7 +240,7 @@ class MongoDB(commands.Cog):
             timestamp=datetime.datetime.utcnow(),
             color=c_random_color()
         )
-        return await ctx.send(embed=embed)
+        await ctx.send(embed=embed)
 
 
 def setup(bot):
