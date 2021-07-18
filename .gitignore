@@ -135,4 +135,4 @@ dmypy.json
 .pytype/
 
 # All the other stuff I want
-png
+*.png
