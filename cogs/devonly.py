@@ -448,6 +448,7 @@ class DevOnly(commands.Cog):
         name="eval",
         aliases=["exec"]
     )
+    @commands.is_owner()
     async def _eval(self, ctx, *, code: str):
         """Evaluates code given"""
 
@@ -463,11 +464,7 @@ class DevOnly(commands.Cog):
 
         env = {
             "bot": self.bot,
-            "ctx": ctx,
-            "channel": ctx.channel,
-            "author": ctx.author,
-            "guild": ctx.guild,
-            "message": ctx.message,
+            "ctx": ctx
         }
 
         env.update(globals())
