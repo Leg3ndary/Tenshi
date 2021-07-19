@@ -13,6 +13,8 @@ import io
 from contextlib import redirect_stdout
 import textwrap
 import traceback
+import time
+
 
 def cleanup_code(content):
     """Automatically removes code blocks from the code"""
@@ -374,71 +376,6 @@ class DevOnly(commands.Cog):
                color=c_get_color("red")
             )
             await ctx.send(embed=embed_error)
-
-    @dev.group()
-    async def cache(self, ctx):
-        """Recacheing Users, Prefixes, or Guilds"""
-        if ctx.invoked_subcommand is None:
-            embed = discord.Embed(
-                title="Re-Cache",
-                description="`user`, `prefixes` or `guild`",
-                timestamp=datetime.datetime.utcnow(),
-                color=c_random_color()
-            )
-            await ctx.send(embed=embed)
-
-    @cache.command()
-    async def prefix(self, ctx):
-        guild_list = []
-        for guild in self.bot.guilds:
-            guild_list.append(str(guild.id))
-
-        guild_list_len = len(guild_list)
-        await ctx.send(f"{len(guild_list)} servers retrieved from discord.")
-
-        """
-        for guild_setting in server_settings.find():
-            try:
-                guild_list.remove(str(guild_setting["_id"]))
-            except:
-                pass
-        """
-
-        if guild_list_len-len(guild_list) != guild_list_len:
-            await ctx.send(f"{len(guild_list)} servers not in server_settings, adding them...")
-            
-            """
-            for guild_na in guild_list:
-                server_dict = {
-                    "_id": str(guild_na),
-                    "prefixes": ["t>", ">"],
-                    "update_channel": None
-                }
-                server_settings.insert_one(server_dict)
-                self.bot.prefix_dict[str(guild_na)] = server_dict
-            print(f"Finished adding server_settings\nProcess Finished.")
-            """
-        else:
-            return await ctx.send(f"No guilds not detected in server_settings\nProcess Finished.")
-
-    # fix this too
-    @cache.command()
-    async def user(self, ctx):
-        await ctx.send(f"Starting Cache User Process.")
-        user_dict = {}
-        """
-        for user in user_settings.find():
-            user_dict.update({
-                str(user["_id"]): {
-                    "supporter": user["supporter"],
-                    "accepted_rules": user["accepted_rules"],
-                    "dm_updates": user["dm_updates"],
-                    "embed_colors": user["embed_colors"]
-                    }})
-        """
-
-        self.bot.user_dict = user_dict
-        return await ctx.send(f"Recached Users.")
 
     @commands.command()
     async def charinfo(self, ctx, *, characters: str):
