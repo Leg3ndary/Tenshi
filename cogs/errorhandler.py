@@ -68,6 +68,9 @@ class ErrorHandler(commands.Cog):
         elif isinstance(error, commands.NSFWChannelRequired):
             return await ctx.send(embed=gen_error_embed(f"{ctx.command} has been marked NSFW channels only."))
 
+        # Check fail
+        elif isinstance(error, commands.CheckFailure):
+            return await ctx.send(embed=gen_error_embed(f"{ctx.command} has failed because you don't have sufficient permissions"))
 
         else:
             # All other Errors not returned come here. And we can just print the default TraceBack.
