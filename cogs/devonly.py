@@ -25,7 +25,7 @@ class DevOnly(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.group()
+    @commands.group(hidden=True)
     @commands.is_owner()
     async def dev(self, ctx):
         """Commands thats sole purpose is for me to experiment."""
@@ -38,13 +38,6 @@ class DevOnly(commands.Cog):
         )
             await ctx.send(embed=embed)
 
-    @dev.error
-    async def dev_error(self, ctx, error):
-        """Will spam my terminal if they keep trying :P"""
-        if isinstance(error, commands.CheckFailure):
-            print(f"{ctx.author.name} - {ctx.author.id} ran dev command.")
-            # add auto blacklist later.
-    
     @dev.command(
         help="Load a cog",
         brief="Loading Cogs", 
@@ -356,6 +349,32 @@ class DevOnly(commands.Cog):
             )
             await ctx.send(embed=embed_error)
 
+    @dev.command()
+    async def leave(self, ctx, *, guild: discord.Guild):
+        """Leave a guild."""
+        try:
+            await ctx.guild.leave()
+            embed = discord.Embed(
+               title=f"Left {guild.name}",
+               description=f"""```md
+- Owned by {guild.owner} - {guild.owner_id}
+```""",
+               timestamp=datetime.datetime.utcnow(),
+               color=c_random_color()
+            )
+            await ctx.send(embed=embed)
+
+        except Exception as e:
+            embed_error = discord.Embed(
+               title="Error",
+               description=f"""```diff
+- {e}
+```""",
+               timestamp=datetime.datetime.utcnow(),
+               color=c_get_color("red")
+            )
+            await ctx.send(embed=embed_error)
+
     @dev.group()
     async def cache(self, ctx):
         """Recacheing Users, Prefixes, or Guilds"""
@@ -368,7 +387,6 @@ class DevOnly(commands.Cog):
             )
             await ctx.send(embed=embed)
 
-    # fix once u can get methods up and running again
     @cache.command()
     async def prefix(self, ctx):
         guild_list = []
