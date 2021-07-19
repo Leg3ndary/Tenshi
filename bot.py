@@ -13,7 +13,7 @@ from cogs.colors import *
 
 load_dotenv()
 
-def get_prefix(bot, message):
+async def get_prefix(bot, message):
     """Gets the prefix from built cache, if a guild isn"t found (Direct Messages) assumes prefix is the below"""
     if message.guild is None:
         return "t>"
@@ -36,7 +36,7 @@ cog_list = [
     "cogs.unsplash",
     "cogs.systeminfo", # Done
     "cogs.mongodb",
-    "cogs.data",
+    "cogs.settings",
     "cogs.colors",
     "cogs.moderation",
     "cogs.language",
