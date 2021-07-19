@@ -31,15 +31,19 @@ class TenshiHelp(commands.HelpCommand):
         for cog, commands in mapping.items():
             command_signatures = [self.get_command_signature(c) for c in commands]
             if command_signatures:
-                cog_name = getattr(cog, "qualified_name", "No Category")
-                signatures = "\n".join(command_signatures)
-                embed.add_field(
-                    name=cog_name, 
-                    value=f"""```
+                cog_name = getattr(cog, "qualified_name", "ERROR")
+                if cog_name in ["DevOnly", "ERROR", "Redis"]:
+                    # Hiding certain names :L
+                    pass
+                else:
+                    signatures = "\n".join(command_signatures)
+                    embed.add_field(
+                        name=cog_name, 
+                        value=f"""```
 {signatures}
 ```""", 
-                    inline=True
-                )
+                        inline=True
+                    )
 
         channel = self.get_destination()
         await channel.send(embed=embed)
