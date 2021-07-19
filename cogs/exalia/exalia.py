@@ -129,7 +129,7 @@ class Exalia(commands.Cog):
     @commands.is_owner()
     async def exalia(self, ctx):
         """Managing things in our database related to exalia"""
-        if not ctx.invoked_subcommamd:
+        if not ctx.invoked_subcommand:
             return await ctx.send_help("exalia")
 
     @exalia.command()
@@ -151,7 +151,7 @@ class Exalia(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        """On ready"""
+        """On ready edit this later please"""
         pass
 
     @commands.command()
