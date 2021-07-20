@@ -15,7 +15,6 @@ from cogs.colors import *
 
 motor_client = motor.motor_asyncio.AsyncIOMotorClient(f"""mongodb+srv://{os.getenv("MongoUser")}:{os.getenv("MongoPass")}@tenshi-cluster.bvwvs.mongodb.net/database?retryWrites=true&w=majority""")
 
-
 database = motor_client["database"]
 server_db = motor_client["server"]
 user_db = motor_client["user"]
