@@ -105,6 +105,7 @@ class UrbanMenu(menus.Menu):
         self.data = data
         self.page_cap = len(data) - 1
         self.page_number = 0
+        self.on_cooldown = False
 
     async def send_initial_message(self, ctx, channel):
         """Initial Page thats sent"""
@@ -114,13 +115,17 @@ class UrbanMenu(menus.Menu):
     @menus.button(":back_button_triangle:843677189533597749")
     async def on_back(self, payload):
         """When we click to go back a page"""
-        if self.page_number > 1:
+        if self.on_cooldown is True:
+            return
+        elif self.page_number > 1:
             self.page_number -= 1
         else:
             self.page_number = self.page_cap
         embed = await u_gen_embed(self.data[self.page_number])
         await self.message.edit(embed=embed)
-        return await asyncio.sleep(1)
+        self.on_cooldown = True
+        await asyncio.sleep(1)
+        self.on_cooldown = False
     
     @menus.button(":pause:820003279941271592")
     async def on_stop(self, payload):
@@ -130,13 +135,17 @@ class UrbanMenu(menus.Menu):
     @menus.button(":play_button_triangle:820007884641402920")
     async def on_next(self, payload):
         """When users click next"""
-        if self.page_number < self.page_cap:
+        if self.on_cooldown is True:
+            return
+        elif self.page_number < self.page_cap:
             self.page_number += 1
         else:
             self.page_number = 0
         embed = await u_gen_embed(self.data[self.page_number])
         await self.message.edit(embed=embed)
-        return await asyncio.sleep(1)
+        self.on_cooldown = True
+        await asyncio.sleep(1)
+        self.on_cooldown = False
 
 
 class Dictionary(menus.Menu):
@@ -146,6 +155,7 @@ class Dictionary(menus.Menu):
         self.data = data
         self.page_cap = len(data["meanings"]) - 1
         self.page_number = 0
+        self.on_cooldown = False
 
     async def send_initial_message(self, ctx, channel):
         """Initial Page thats sent"""
@@ -156,13 +166,17 @@ class Dictionary(menus.Menu):
     @menus.button(":back_button_triangle:843677189533597749")
     async def on_back(self, payload):
         """When we click to go back a page"""
-        if self.page_number > 1:
+        if self.on_cooldown is True:
+            return
+        elif self.page_number > 1:
             self.page_number -= 1
         else:
             self.page_number = self.page_cap
         embed = await d_gen_embed(self.data["meanings"][self.page_number], self.data["word"])
         await self.message.edit(embed=embed)
-        return await asyncio.sleep(1)
+        self.on_cooldown = True
+        await asyncio.sleep(1)
+        self.on_cooldown = False
     
     @menus.button(":pause:820003279941271592")
     async def on_stop(self, payload):
@@ -172,13 +186,17 @@ class Dictionary(menus.Menu):
     @menus.button(":play_button_triangle:820007884641402920")
     async def on_next(self, payload):
         """When users click next"""
-        if self.page_number < self.page_cap:
+        if self.on_cooldown is True:
+            return
+        elif self.page_number < self.page_cap:
             self.page_number += 1
         else:
             self.page_number = 0
         embed = await d_gen_embed(self.data["meanings"][self.page_number], self.data["word"])
         await self.message.edit(embed=embed)
-        return await asyncio.sleep(1)
+        self.on_cooldown = True
+        await asyncio.sleep(1)
+        self.on_cooldown = False
 
 
 class Language(commands.Cog):
