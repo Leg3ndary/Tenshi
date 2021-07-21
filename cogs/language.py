@@ -30,19 +30,19 @@ async def d_get_word(language, word):
         async with session.get(f"https://api.dictionaryapi.dev/api/v2/entries/{language}/{word}") as request:
             return(await request.json())
 
-def cut(text: str, cut_num=300):
-    """Cut a paragraph to resize it and fit it correctly"""
+async def cut(text: str, cut_num=300):
+    """Cut a paragraph to resize it and fit it correctly currently not used..."""
     list_data = []
     cut_num = int(cut_num)
     for index in range(0, len(text), cut_num):
         list_data.append(text[index : index + cut_num])
     return(list_data)
 
-def clean(text:str):
+async def clean(text:str):
     text = text.replace("[", "").replace("]", "").replace("*", "").capitalize()
     return text
 
-def gen_embed(data):
+async def u_gen_embed(data):
     """Generate an embed with the data needed in it"""
     embed = discord.Embed(
         title=f"""__{data["word"]}__""",
@@ -62,6 +62,42 @@ def gen_embed(data):
     )
     return embed
 
+async def reformat_list(data):
+    """Reformat a list, just a quick function that I have"""
+    new_data = []
+    for item in data:
+        new_data.append(f"`{item}`")
+    return new_data
+
+
+async def d_gen_embed(data, word):
+    """Generate an embed with the data given"""
+    embed = discord.Embed(
+       title=f"""{word.capitalize()} - {data["partOfSpeech"].capitalize()}""",
+       description=f"""""",
+       timestamp=datetime.datetime.utcnow(),
+       color=c_random_color()
+    )
+    definition_num = 1
+    for definition in data["definitions"]:
+        if definition.get("synonyms"):
+            synonyms = ", ".join(await reformat_list(definition.get("synonyms")))
+        
+        else:
+            synonyms = "`None Given`"
+        
+        embed.add_field(
+            name=f"""Definition {str(definition_num)}""",
+            value=f"""{definition["definition"]}
+            > {definition["example"]}
+            {synonyms}""",
+            inline=False
+        )
+        definition_num += 1
+
+    return embed
+
+
 class UrbanMenu(menus.Menu):
     """Urban Dictionary Menus"""
     def __init__(self, data):
@@ -72,7 +108,7 @@ class UrbanMenu(menus.Menu):
 
     async def send_initial_message(self, ctx, channel):
         """Initial Page thats sent"""
-        embed = gen_embed(self.data[self.page_number])
+        embed = await u_gen_embed(self.data[self.page_number])
         return await channel.send(embed=embed)
 
     @menus.button(":back_button_triangle:843677189533597749")
@@ -82,7 +118,7 @@ class UrbanMenu(menus.Menu):
             self.page_number -= 1
         else:
             self.page_number = self.page_cap
-        embed = gen_embed(self.data[self.page_number])
+        embed = await u_gen_embed(self.data[self.page_number])
         await self.message.edit(embed=embed)
         return await asyncio.sleep(1)
     
@@ -98,7 +134,49 @@ class UrbanMenu(menus.Menu):
             self.page_number += 1
         else:
             self.page_number = 0
-        embed = gen_embed(self.data[self.page_number])
+        embed = await u_gen_embed(self.data[self.page_number])
+        await self.message.edit(embed=embed)
+        return await asyncio.sleep(1)
+
+
+class Dictionary(menus.Menu):
+    """Regular Dictionary Menus"""
+    def __init__(self, data):
+        super().__init__(timeout=60)
+        self.data = data
+        self.page_cap = len(data["meanings"]) - 1
+        self.page_number = 0
+
+    async def send_initial_message(self, ctx, channel):
+        """Initial Page thats sent"""
+        print("initial ran")
+        embed = await d_gen_embed(self.data["meanings"][self.page_number], self.data["word"])
+        return await channel.send(embed=embed)
+
+    @menus.button(":back_button_triangle:843677189533597749")
+    async def on_back(self, payload):
+        """When we click to go back a page"""
+        if self.page_number > 1:
+            self.page_number -= 1
+        else:
+            self.page_number = self.page_cap
+        embed = await d_gen_embed(self.data["meanings"][self.page_number], self.data["word"])
+        await self.message.edit(embed=embed)
+        return await asyncio.sleep(1)
+    
+    @menus.button(":pause:820003279941271592")
+    async def on_stop(self, payload):
+        """If users wanna be nice and stop the embed tracking reactions when its done..."""
+        self.stop()
+
+    @menus.button(":play_button_triangle:820007884641402920")
+    async def on_next(self, payload):
+        """When users click next"""
+        if self.page_number < self.page_cap:
+            self.page_number += 1
+        else:
+            self.page_number = 0
+        embed = await d_gen_embed(self.data["meanings"][self.page_number], self.data["word"])
         await self.message.edit(embed=embed)
         return await asyncio.sleep(1)
 
@@ -142,8 +220,8 @@ class Language(commands.Cog):
                 color=c_random_color()
             )
             return await ctx.send(embed=embed_failure)
-        dmenu = UrbanMenu(data)
-        await dmenu.start(ctx)
+        umenu = UrbanMenu(data)
+        await umenu.start(ctx)
 
     @commands.group()
     async def translate(self, ctx):
@@ -244,39 +322,10 @@ class Language(commands.Cog):
     )
     @commands.cooldown(2.0, 6.0, commands.BucketType.user)
     async def dictionary(self, ctx, word: str):
-        data = await d_get_word('en_US', word)
+        data = await d_get_word("en_US", word)
         data = data[0]
-
-        embed = discord.Embed(
-           title=f"__{word.capitalize()}__ Search",
-            timestamp=datetime.datetime.utcnow(),
-            color=c_random_color(),
-            url=data['phonetics'][0]['audio']
-        )
-        
-        for meaning in data['meanings']:
-            synonoms = []
-            if 'synonyms' in meaning['definitions'][0]:
-                for synonom in meaning['definitions'][0]['synonyms']:
-                    synonoms.append(synonom.capitalize())
-            
-            else:
-                synonoms = 'None'
-
-            if 'example' in meaning['definitions'][0]:
-                example = meaning['definitions'][0]['example'].capitalize()
-            else:
-                example = 'None'
-
-            embed.add_field(
-                name=meaning['partOfSpeech'].capitalize(),
-                value=f"""{meaning['definitions'][0]['definition'].capitalize()}
-                > *{example}*
-                Synonoms: {str(synonoms).replace('[', '').replace(']', '').replace("'", "")}""",
-                inline=False
-            )
-        
-        await ctx.send(embed=embed)
+        dmenu = Dictionary(data)
+        await dmenu.start(ctx)
 
 
 def setup(bot):
