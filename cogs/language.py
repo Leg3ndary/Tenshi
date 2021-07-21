@@ -46,7 +46,7 @@ async def u_gen_embed(data):
     """Generate an embed with the data needed in it"""
     embed = discord.Embed(
         title=f"""__{data["word"]}__""",
-        description=f"""{clean(data["definition"])}""",
+        description=f"""{await clean(data["definition"])}""",
         url=data["permalink"],
         timestamp=datetime.datetime.utcnow(),
         color=c_random_color()
@@ -117,14 +117,14 @@ class UrbanMenu(menus.Menu):
         """When we click to go back a page"""
         if self.on_cooldown is True:
             return
-        elif self.page_number > 1:
+        if self.page_number > 1:
             self.page_number -= 1
         else:
             self.page_number = self.page_cap
         embed = await u_gen_embed(self.data[self.page_number])
         await self.message.edit(embed=embed)
         self.on_cooldown = True
-        await asyncio.sleep(1)
+        await asyncio.sleep(2)
         self.on_cooldown = False
     
     @menus.button(":pause:820003279941271592")
@@ -144,7 +144,7 @@ class UrbanMenu(menus.Menu):
         embed = await u_gen_embed(self.data[self.page_number])
         await self.message.edit(embed=embed)
         self.on_cooldown = True
-        await asyncio.sleep(1)
+        await asyncio.sleep(2)
         self.on_cooldown = False
 
 
@@ -159,7 +159,6 @@ class Dictionary(menus.Menu):
 
     async def send_initial_message(self, ctx, channel):
         """Initial Page thats sent"""
-        print("initial ran")
         embed = await d_gen_embed(self.data["meanings"][self.page_number], self.data["word"])
         return await channel.send(embed=embed)
 
@@ -175,7 +174,7 @@ class Dictionary(menus.Menu):
         embed = await d_gen_embed(self.data["meanings"][self.page_number], self.data["word"])
         await self.message.edit(embed=embed)
         self.on_cooldown = True
-        await asyncio.sleep(1)
+        await asyncio.sleep(2)
         self.on_cooldown = False
     
     @menus.button(":pause:820003279941271592")
@@ -195,7 +194,7 @@ class Dictionary(menus.Menu):
         embed = await d_gen_embed(self.data["meanings"][self.page_number], self.data["word"])
         await self.message.edit(embed=embed)
         self.on_cooldown = True
-        await asyncio.sleep(1)
+        await asyncio.sleep(2)
         self.on_cooldown = False
 
 
