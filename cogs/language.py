@@ -88,8 +88,8 @@ async def d_gen_embed(data, word):
         
         embed.add_field(
             name=f"""Definition {str(definition_num)}""",
-            value=f"""{definition["definition"]}
-            > {definition["example"]}
+            value=f"""{definition.get("definition", "None")}
+            > {definition.get("example", "None")}
             {synonyms}""",
             inline=False
         )
