@@ -39,7 +39,7 @@ cog_list = [
     "cogs.settings", # will update as I need too
     "cogs.colors", # add menu pages
     "cogs.moderation", # Done.
-    "cogs.language", # Done. Maybe update dictionary and add a menu.
+    "cogs.language", # Done.
     "cogs.redis", # Not Done.
     "cogs.errorhandler", # Done.
     "cogs.exalia.exalia" # Not Done.
