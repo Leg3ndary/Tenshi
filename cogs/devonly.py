@@ -13,7 +13,6 @@ import io
 from contextlib import redirect_stdout
 import textwrap
 import traceback
-import time
 
 
 def cleanup_code(content):
@@ -491,6 +490,5 @@ class DevOnly(commands.Cog):
                 return await ctx.send(embed=embed_e3)
 
 
-# Adding the Cog
 def setup(bot):
     bot.add_cog(DevOnly(bot))
