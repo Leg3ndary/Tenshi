@@ -11,11 +11,16 @@ from cogs.colors import *
 import aioredis
 import os
 import time
+import asyncio
 
 
 """
 await self.bot.redis.set("Key", "Data") Set a key
 value = await self.bot.redis.get("Key")
+"""
+
+"""
+This is tracking all our data about commands
 """
 
 
@@ -28,7 +33,7 @@ class Redis(commands.Cog):
     async def on_ready(self):
         """Connect to our Redis DB"""
         start = time.monotonic()
-        self.bot.redis= await aioredis.from_url(
+        self.bot.redis = await aioredis.from_url(
             "redis://redis-15657.c253.us-central1-1.gce.cloud.redislabs.com:15657",
             username="",
             password=os.getenv("RedisPass"),
@@ -91,7 +96,7 @@ class Redis(commands.Cog):
             )
 
     @redis.command()
-    async def search(self, ctx, pattern="*"):
+    async def search(self, ctx, *, pattern: str="*"):
         """List all our keys"""
         keys = ""
         for count, value in enumerate(await self.bot.redis.keys(pattern), start=1):
@@ -127,6 +132,7 @@ class Redis(commands.Cog):
 [ Database Size (Keys): {await self.bot.redis.dbsize()} ]
 ```"""
         )
+        await ctx.send(embed=embed)
 
     @redis.command()
     async def cinfo(self, ctx):
@@ -148,6 +154,47 @@ class Redis(commands.Cog):
             color=c_random_color()
         )
         await ctx.send(embed=embed)
+    
+    @redis.command()
+    async def sa(self, ctx):
+        """Show all data"""
+        embed = discord.Embed(
+           title="Attempting to fetch all data",
+           description=f"""ETA {await self.bot.redis.dbsize() * 0.1} seconds""",
+           timestamp=datetime.datetime.utcnow(),
+           color=c_get_color("red")
+        )
+        msg = await ctx.send(embed=embed)
+
+        keys = await self.bot.redis.scan()
+
+        visualiser = ""
+        for key in keys[1]:
+            visualiser = f"""{visualiser}\n{key:15}: {await self.bot.redis.get(key):>5}"""
+            await asyncio.sleep(0.1)
+
+        embed_done = discord.Embed(
+           title="Finished",
+           description=f"""```yaml
+{visualiser}
+```""",
+           timestamp=datetime.datetime.utcnow(),
+           color=c_get_color("green")
+        )
+        await msg.edit(embed=embed_done)
+
+    @commands.Cog.listener()
+    async def on_command(self, ctx):
+        """Tracking commands"""
+        command = str(ctx.command)
+        data = await self.bot.redis.get(command)
+        if not data:
+            value = 1
+
+        else:
+            value = int(data) + 1
+
+        await self.bot.redis.set(command, value)
 
 
 def setup(bot):
