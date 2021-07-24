@@ -28,16 +28,15 @@ bot = commands.Bot(
 
 
 cog_list = [
-    "cogs.devonly", # basically done
-    "cogs.help", # also basically done for now
-    "cogs.anime", # need to add all the other methods sighs
-    "cogs.other", # basically done
-    "cogs.music", # not done
-    "cogs.unsplash", # not done
+    "cogs.devonly", # Done. May add more stuff idk
+    "cogs.help", # Not done, will update formatting last.
+    "cogs.anime", # Not Done.
+    "cogs.other", # -
+    "cogs.music", # Not done.
     "cogs.systeminfo", # Done.
-    "cogs.mongodb", # will update as I need too
-    "cogs.settings", # will update as I need too
-    "cogs.colors", # add menu pages
+    "cogs.mongodb", # -
+    "cogs.settings", # -
+    "cogs.colors", # Not Done, 
     "cogs.moderation", # Done.
     "cogs.language", # Done.
     "cogs.redis", # Not Done.
