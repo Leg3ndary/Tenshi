@@ -57,6 +57,7 @@ print(f"{len(cog_list)} cogs loaded in {(round((end - start) * 1000, 2))/1000} s
 @bot.event
 async def on_ready():
     """On ready do stuff"""
+    # Remove on actual bot, only used for testing purposes
     bot.update_channel = await bot.fetch_channel(866868897398259732)
     embed = discord.Embed(
        title="Cogs",
