@@ -41,7 +41,8 @@ cog_list = [
     "cogs.language", # Done.
     "cogs.redis", # Not Done.
     "cogs.errorhandler", # Done.
-    "cogs.exalia.exalia" # Not Done.
+    "cogs.exalia.exalia", # Not Done.
+    "cogs.photos" # Not Done
 ]
 
 bot.cog_list = cog_list

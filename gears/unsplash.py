@@ -10,12 +10,12 @@ import os
 
 
 param_dict = {
-    ""
+    "images": ""
 }
 
 
 class Unsplash():
-    """Accessing stuff about Unsplash"""
+    """Accessing stuff about Unsplash, I know a lot of this is just repeated code but I'm keeping it :L"""
     def __init__(self):
         self.client_id = os.getenv("UnsplashToken")
         self.latest_header = None
@@ -68,6 +68,28 @@ class Unsplash():
         request_url = await self.to_url(params)
         return await self.request_url(f"""{self.api_url}/users/{username}/statistics/{request_url}""")
 
+    async def search_photos(self, params: dict):
+        """Search for photos based on the params given"""
+        request_url = await self.to_url(params)
+        return await self.request_url(f"""{self.api_url}/search/photos/{request_url}""")
+
+    async def search_collections(self, params: dict):
+        """Search for collections based on the params given"""
+        request_url = await self.to_url(params)
+        return await self.request_url(f"""{self.api_url}/search/collections/{request_url}""")
+    
+    async def search_users(self, params: dict):
+        """Search for users based on the params given"""
+        request_url = await self.to_url(params)
+        return await self.request_url(f"""{self.api_url}/search/users/{request_url}""")
+
+    async def get_total_stats(self):
+        """Return total Unsplash stats"""
+        return await self.request_url(f"""{self.api_url}/stats/total""")
+
+    async def get_monthly_stats(self):
+        """Return monthly counts (30 days)"""
+        return await self.request_url(f"""{self.api_url}/stats/month""") 
 
 
     # Requesting stuff
@@ -100,6 +122,3 @@ class Unsplash():
 
     async def get_param(self, method):
         """Return possible parameters from methods"""
-
-
-unsplash_client = Unsplash()
