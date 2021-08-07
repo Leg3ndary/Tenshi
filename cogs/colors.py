@@ -8,63 +8,7 @@ import discord
 from discord.ext import commands, menus
 import random
 import datetime
-
-# Deprecciated for now.
-"""
-def get_color(bot, ctx=None):
-    \"\"\"Gets one of our bots default colors\"\"\"
-    if ctx is not None:
-        if str(ctx.author.id) in bot.user_dict:
-            color_data = bot.user_dict[str(ctx.author.id)]["embed_colors"] # Get Data
-            if color_data == "default":
-                try:
-                    color = bot.color_dict[ctx.command]
-                    color = bot.color[color]
-                except:
-                    print(f"[ERROR] [{datetime.datetime.utcnow()}]: Command {ctx.command} was not found in the color database, please add it.")
-                    color = 1 # Black + 1 since disc doesn't like full black
-                return color
-            elif color_data =="random_default":
-                return random.choice(bot.color_list)
-
-    color = random.randint(0,0xffffff)
-    return color
-"""
-
-def c_random_color():
-    return colors[random.choice(color_list)]
-
-def c_get_color(color):
-    return colors[color]
-
-colors = {
-    "_id": "default",
-    "navy": 0x001F3F,
-    "blue": 0x0074D9,
-    "aqua": 0x7FDBFF,
-    "teal": 0x39CCCC,
-    "olive": 0x3D9970,
-    "green": 0x2ECC40,
-    "lime": 0x01FF70,
-    "yellow": 0xFFDC00,
-    "orange": 0xFF851B,
-    "red": 0xFF4136,
-    "maroon": 0x85144b,
-    "pink": 0xF012BE,
-    "purple": 0xB10DC9,
-    "black": 0x111111,
-    "gray": 0xAAAAAA,
-    "silver": 0xDDDDDD,
-    "white": 0xFFFFFF
-}
-
-color_list = ["navy", "blue", "aqua", "teal", "olive", "green", "lime", "yellow", "orange", "red", "maroon", "pink", "purple", "black", "gray", "silver", "white"]
-
-# Color Dictionary for commands :p
-color_dict = {
-    "colors": "random_default",
-    "colors navy": colors["navy"],
-}
+from gears.cosmetics import *
 
 class ColorMenu(menus.Menu):
     def __init__(self):
