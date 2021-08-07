@@ -9,6 +9,7 @@ from discord.ext import commands
 import datetime
 import gears.unsplash
 
+unsplash_client = gears.unsplash.Unsplash()
 
 class Photos(commands.Cog):
     """Photo related commands, acts as an ui for our unsplash gear"""
@@ -16,10 +17,16 @@ class Photos(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command
+    @commands.group()
     async def unsplash(self, ctx):
-        pass
+        if not ctx.invoked_subcommand:
+            await ctx.send_help("unsplash")
 
+    @unsplash.command()
+    async def info(self, ctx):
+        """Display some info about our connection with Unsplash"""
+        print(await unsplash_client.get_random_photo())
+        await ctx.send(await unsplash_client.get_ratelimit_remaining())
 
 def setup(bot):
     bot.add_cog(Photos(bot))

@@ -34,63 +34,62 @@ class Unsplash():
     async def get_random_photo(self, params: dict={}):
         """Get a completely random photo from unsplash"""
         request_string = await self.to_url(params)
-        return await self.request_url(f"""{self.api_url}/photos/random/{request_string}""")
+        return await self.request_url(f"""/photos/random/{request_string}""")
 
     async def get_photo_by_id(self, photo_id: str):
         """Get a photo by its id"""
-        return await self.request_url(f"""{self.api_url}/photos/{photo_id}/""")
+        return await self.request_url(f"""/photos/{photo_id}/""")
 
     async def get_user_profile(self, username: str):
         """Return a public users profile information"""
-        return await self.request_url(f"""{self.api_url}/users/{username}/""")
+        return await self.request_url(f"""/users/{username}/""")
     
     async def get_user_portfolio(self, username: str):
         """Return a public users portfolio link"""
-        return await self.request_url(f"""{self.api_url}/users/{username}/portfolio/""")
+        return await self.request_url(f"""/users/{username}/portfolio/""")
 
     async def get_user_photos(self, username: str, params: dict):
         """Returns a list of all the users photos"""
         request_url = await self.to_url(params)
-        return await self.request_url(f"""{self.api_url}/users/{username}/photos/{request_url}""")
+        return await self.request_url(f"""/users/{username}/photos/{request_url}""")
 
     async def get_user_liked_photos(self, username: str, params: dict):
         """Returns a list of all the photos a user has liked"""
         request_url = await self.to_url(params)
-        return await self.request_url(f"""{self.api_url}/users/{username}/likes/{request_url}""")
+        return await self.request_url(f"""/users/{username}/likes/{request_url}""")
 
     async def get_user_collections(self, username: str, params: dict):
         """Returns a list of all the collections a user has made"""
         request_url = await self.to_url(params)
-        return await self.request_url(f"""{self.api_url}/users/{username}/collections/{request_url}""")
+        return await self.request_url(f"""/users/{username}/collections/{request_url}""")
 
     async def get_user_statistics(self, username: str, params: dict):
         """Return a users statistics"""
         request_url = await self.to_url(params)
-        return await self.request_url(f"""{self.api_url}/users/{username}/statistics/{request_url}""")
+        return await self.request_url(f"""/users/{username}/statistics/{request_url}""")
 
     async def search_photos(self, params: dict):
         """Search for photos based on the params given"""
         request_url = await self.to_url(params)
-        return await self.request_url(f"""{self.api_url}/search/photos/{request_url}""")
+        return await self.request_url(f"""/search/photos/{request_url}""")
 
     async def search_collections(self, params: dict):
         """Search for collections based on the params given"""
         request_url = await self.to_url(params)
-        return await self.request_url(f"""{self.api_url}/search/collections/{request_url}""")
+        return await self.request_url(f"""/search/collections/{request_url}""")
     
     async def search_users(self, params: dict):
         """Search for users based on the params given"""
         request_url = await self.to_url(params)
-        return await self.request_url(f"""{self.api_url}/search/users/{request_url}""")
+        return await self.request_url(f"""/search/users/{request_url}""")
 
     async def get_total_stats(self):
         """Return total Unsplash stats"""
-        return await self.request_url(f"""{self.api_url}/stats/total""")
+        return await self.request_url(f"""/stats/total""")
 
     async def get_monthly_stats(self):
         """Return monthly counts (30 days)"""
-        return await self.request_url(f"""{self.api_url}/stats/month""") 
-
+        return await self.request_url(f"""/stats/month""")
 
     # Requesting stuff
     async def to_url(self, dictionary: dict):
@@ -110,15 +109,16 @@ class Unsplash():
 
         return url_link
 
-    async def request_url(self, url):
+    async def request_url(self, url: str):
         """Get a url and update latest header"""
         headers = {
             "Authorization": f"""Client-ID {self.client_id}"""
         }
         async with aiohttp.ClientSession(headers=headers) as session:
-            async with session.get(url) as request:
+            async with session.get(self.api_url + url) as request:
                 await self.set_latest_header(request.headers)
                 return await request.json()
 
-    async def get_param(self, method):
+    async def get_param(self, method: str):
         """Return possible parameters from methods"""
+        return param_dict.get(method)
