@@ -14,7 +14,7 @@ import youtube_dl
 from async_timeout import timeout
 from discord.ext import commands
 import datetime as dt
-from cogs.colors import *
+from gears.cosmetics import *
 import asyncio
 
 

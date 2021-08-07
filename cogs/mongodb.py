@@ -10,7 +10,7 @@ import datetime
 import os
 import motor.motor_asyncio
 import time
-from cogs.colors import *
+from gears.cosmetics import *
 
 
 def convert(seconds):

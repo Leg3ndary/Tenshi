@@ -7,7 +7,7 @@ This software is licensed under Creative Commons Attribution-NonCommercial-NoDer
 import discord
 from discord.ext import commands, menus
 import datetime
-from cogs.colors import *
+from gears.cosmetics import *
 from gears.jikan import JikanGear
 import asyncio
 

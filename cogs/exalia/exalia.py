@@ -7,10 +7,9 @@ This software is licensed under Creative Commons Attribution-NonCommercial-NoDer
 import discord
 from discord.ext import commands
 import datetime 
-from cogs.colors import *
+from gears.cosmetics import *
 from cogs.exalia.inventory import *
 import os
-import time
 import asyncio
 import motor.motor_asyncio
 

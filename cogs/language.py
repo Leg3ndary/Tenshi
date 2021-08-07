@@ -8,7 +8,7 @@ import discord
 from discord.ext import commands, menus
 import datetime
 import aiohttp
-from cogs.colors import *
+from gears.cosmetics import *
 import asyncio
 import googletrans
 from googletrans import Translator

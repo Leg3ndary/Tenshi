@@ -10,6 +10,7 @@ import datetime as dt
 import random as rnd
 import aiohttp
 import json
+from gears.cosmetics import *
 
 async def trivia_request(question_amount, category, difficulty, type):
     request_string = ""

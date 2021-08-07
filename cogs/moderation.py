@@ -6,7 +6,7 @@ This software is licensed under Creative Commons Attribution-NonCommercial-NoDer
 
 import discord
 from discord.ext import commands
-from cogs.colors import *
+from gears.cosmetics import *
 import datetime
 
 

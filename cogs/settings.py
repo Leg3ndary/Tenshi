@@ -10,7 +10,7 @@ import datetime
 import asyncio
 import motor.motor_asyncio
 import os
-from cogs.colors import *
+from gears.cosmetics import *
 
 
 motor_client = motor.motor_asyncio.AsyncIOMotorClient(f"""mongodb+srv://{os.getenv("MongoUser")}:{os.getenv("MongoPass")}@tenshi-cluster.bvwvs.mongodb.net/database?retryWrites=true&w=majority""")

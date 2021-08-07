@@ -9,9 +9,9 @@ from discord.ext import commands, tasks
 import datetime
 import matplotlib.pyplot as plt
 import numpy as np
-from cogs.colors import *
+from gears.cosmetics import *
 
-    
+
 def bot_latency(latency):
     ping = latency * 1000
     ping = round(ping, 2)

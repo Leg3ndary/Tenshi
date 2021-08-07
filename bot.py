@@ -5,11 +5,12 @@ This software is licensed under Creative Commons Attribution-NonCommercial-NoDer
 """
 
 import discord
+import datetime
 from discord.ext import commands
 from dotenv import load_dotenv
 import os
 import time
-from cogs.colors import *
+from gears.cosmetics import *
 
 load_dotenv()
 

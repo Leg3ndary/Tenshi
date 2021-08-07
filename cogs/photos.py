@@ -8,6 +8,7 @@ import discord
 from discord.ext import commands
 import datetime
 import gears.unsplash
+from gears.cosmetics import *
 
 unsplash_client = gears.unsplash.Unsplash()
 

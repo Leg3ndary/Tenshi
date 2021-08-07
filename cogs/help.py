@@ -6,7 +6,7 @@ This software is licensed under Creative Commons Attribution-NonCommercial-NoDer
 
 from discord.ext import commands
 import discord
-from cogs.colors import *
+from gears.cosmetics import *
 
 '''
 Example for command help formats

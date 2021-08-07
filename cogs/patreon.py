@@ -8,8 +8,9 @@ import discord
 from discord.ext import commands
 import datetime
 import patreon
+from gears.cosmetics import *
 
-# Cog Setup
+
 class Patreon(commands.Cog):
     """Payment related commands"""
     def __init__(self, bot):
@@ -20,8 +21,5 @@ class Patreon(commands.Cog):
         """Patreon info"""
         
 
-# Adding the Cog
 def setup(bot):
     bot.add_cog(Patreon(bot))
-
-    #kokoro connect 8

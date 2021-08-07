@@ -1,9 +1,15 @@
+"""
+Tenshi Discord Bot
+Copyright (C) 2021 Ben Z.
+This software is licensed under Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)
+"""
+
 import discord
 import traceback
 import sys
 from discord.ext import commands
 import datetime
-from cogs.colors import *
+from gears.cosmetics import *
 
 
 def gen_error_embed(error_text):

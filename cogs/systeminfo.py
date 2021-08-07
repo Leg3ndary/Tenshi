@@ -9,7 +9,7 @@ from discord.ext import commands
 import datetime
 import psutil
 import platform
-from cogs.colors import *
+from gears.cosmetics import *
 import random
 
     
