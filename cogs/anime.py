@@ -7,10 +7,11 @@ This software is licensed under Creative Commons Attribution-NonCommercial-NoDer
 import discord
 from discord.ext import commands, menus
 import datetime
-import aiohttp
 from cogs.colors import *
+from gears.jikan import JikanGear
 import asyncio
 
+jikan = JikanGear()
 
 def format_time(iso: str):
     text = datetime.datetime.fromisoformat(iso).strftime("%c")
@@ -22,86 +23,6 @@ def format_title(eng, jap):
         return eng
     else:
         return f"{eng}/{jap}"
-
-async def get_user(username):
-    """Get a users profile"""
-    async with aiohttp.ClientSession() as cs:
-        async with cs.get(f"https://api.jikan.moe/v4/users/{username}") as request:
-            if request.status in [200, 404]:
-                return await request.json()
-            else:
-                print(f"[ERROR] [{datetime.datetime.utcnow()}]\nError Code: {request.status}\n{await request.json()}")
-                return None
-
-async def get_anime(id):
-    """Retrieve an anime by its given ID"""
-    async with aiohttp.ClientSession() as cs:
-        async with cs.get(f"https://api.jikan.moe/v4/anime/{id}") as request:
-            if request.status == 200:
-                return await request.json()
-            else:
-                print(f"[ERROR] [{datetime.datetime.utcnow()}]\nError Code: {request.status}\n{await request.json()}")
-                return None
-
-async def get_user_stats(username):
-    """Retrieve an anime by its given ID"""
-    async with aiohttp.ClientSession() as cs:
-        async with cs.get(f"https://api.jikan.moe/v4/users/{username}/statistics") as request:
-            if request.status == 200:
-                return await request.json()
-            else:
-                print(f"[ERROR] [{datetime.datetime.utcnow()}]\nError Code: {request.status}\n{await request.json()}")
-                return None
-
-async def search_user(user):
-    """Just search for a regular anime with a string"""
-    async with aiohttp.ClientSession() as cs:
-        async with cs.get(f"https://api.jikan.moe/v4/users?q={user}") as request:
-            if request.status in [200, 404]:
-                return await request.json()
-            else:
-                print(f"[ERROR] [{datetime.datetime.utcnow()}]\nError Code: {request.status}\n{await request.json()}")
-                return None
-
-async def search_anime(anime):
-    """Search for a user"""
-    async with aiohttp.ClientSession() as cs:
-        async with cs.get(f"https://api.jikan.moe/v4/anime?q={anime}") as request:
-            if request.status == 200:
-                return await request.json()
-            else:
-                print(f"[ERROR] [{datetime.datetime.utcnow()}]\nError Code: {request.status}\n{await request.json()}")
-                return None
-
-async def anime_characters(anime):
-    """Not finished"""
-    async with aiohttp.ClientSession() as cs:
-        async with cs.get(f"https://api.jikan.moe/v4/anime?q={anime}") as request:
-            if request.status == 200:
-                return await request.json()
-            else:
-                print(f"[ERROR] [{datetime.datetime.utcnow()}]\nError Code: {request.status}\n{await request.json()}")
-                return None
-
-async def get_user_updates(username):
-    """Not finished"""
-    async with aiohttp.ClientSession() as cs:
-        async with cs.get(f"https://api.jikan.moe/v4/users/{username}/userupdates") as request:
-            if request.status == 200:
-                return await request.json()
-            else:
-                print(f"[ERROR] [{datetime.datetime.utcnow()}]\nError Code: {request.status}\n{await request.json()}")
-                return None
-
-async def get_anime_picture(image_url):
-    """Use trace.moe to try and trace the images origins"""
-    async with aiohttp.ClientSession() as cs:
-        async with cs.get(f"https://trace.moe/api/search?url={image_url}") as request:
-            if request.status == 200:
-                return await request.json()
-            else:
-                print(f"[ERROR] [{datetime.datetime.utcnow()}]\nError Code: {request.status}\n{await request.json()}")
-                return None
 
 def gen_anime_search(data):
     title = format_title(data["title"], data["title_english"])
@@ -543,7 +464,7 @@ class UserPage(menus.Menu):
     @menus.button("\U0001f4c8")
     async def on_stat(self, payload):
         if not self.stats:
-            self.stats = await get_user_stats(self.data["username"])
+            self.stats = await jikan.get_user_stats(self.data["username"])
             self.stats = self.stats["data"]
         embed = discord.Embed(
             title=f""":chart_with_upwards_trend: {self.data["username"]} - {self.data["mal_id"]}""",
@@ -580,7 +501,7 @@ class UserPage(menus.Menu):
     @menus.button("\U0001f195")
     async def on_user_updates(self, payload):
         if not self.user_updates:
-            self.user_updates = await get_user_updates(self.data["username"])
+            self.user_updates = await jikan.get_user_updates(self.data["username"])
             self.user_updates = self.user_updates["data"]
         embed = discord.Embed(
             title=f""":new: {self.data["username"]} - {self.data["mal_id"]}""",
@@ -604,7 +525,6 @@ class Anime(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-# Anime things
     @commands.group()
     async def anime(self, ctx):
         """Display options for the anime command"""
@@ -618,7 +538,7 @@ class Anime(commands.Cog):
         usage="<request = Regular Search, MAL ID, Attachment, Link>",
         description="""Searching using images and links might not always work because of heavy rate limits..."""
     )
-    @commands.cooldown(1, 5.0, commands.BucketType.user)
+    @commands.cooldown(1.0, 5.0, commands.BucketType.user)
     async def anime_search(self, ctx, *, request=None):
         """Search for an anime, will auto detect numbers for mal_ids or file attachments"""
         if not request:
@@ -632,7 +552,7 @@ class Anime(commands.Cog):
                         tite="Error",
                         description=f"""Currently you can only search for images!
                         `{ctx.message.attachments[0].content_type.replace("image/", "")}` is not a supported file type.""",
-                        color=self.bot.default_colors["red"],
+                        color=c_get_color("red"),
                         timestamp=datetime.datetime.utcnow()
                     )
                     return await ctx.send(embed=invalid_format)
@@ -643,12 +563,12 @@ class Anime(commands.Cog):
 
         if request.isdigit():
             # Request was a singular number we can just use that
-            data = await get_anime(request)
+            data = await jikan.get_anime_by_id(request)
             if not data:
                 embed_error = discord.Embed(
                     title="Looks like there aren't any matches...",
                     description=f"""Sorry but we couldn't find any matches for ID: `{request}` make sure this is the correct MYANIMELIST ID""",
-                    colors=self.bot.default_colors["red"],
+                    color=c_get_color("red"),
                     timestamp=datetime.datetime.utcnow()
                 )
                 return await ctx.send(embed=embed_error)
@@ -658,12 +578,12 @@ class Anime(commands.Cog):
 
         else:
             # Now we know its just a regular text search result so we use this
-            data = await search_anime(request)
+            data = await jikan.search_anime(request)
             if not data["data"]:
                 embed_error2 = discord.Embed(
                     title="Looks like there aren't any matches...",
                     description=f"""Sorry but we couldn't find any matches for `{request}` try being as specific possible and make sure to spell everything correctly!""",
-                    colors=self.bot.default_colors["red"],
+                    color=c_get_color("red"),
                     timestamp=datetime.datetime.utcnow()
                 )
                 return await ctx.send(embed=embed_error2)
@@ -682,12 +602,12 @@ class Anime(commands.Cog):
     )
     async def user_search(self, ctx, username: str):
         """Search for a user"""
-        data = await get_user(username)
+        data = await jikan.get_user(username)
         if "status" in data or not data:
             # We recieved a 404 but we still check anyways just to make sure
             if data["status"] == 404 or not data:
                 # We couldn't find them so now we begin a search
-                data = await search_user(username)
+                data = await jikan.search_user(username)
                 user_start = UserSearch(data["data"])
                 return await user_start.start(ctx)
         else:
