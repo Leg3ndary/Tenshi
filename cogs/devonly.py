@@ -13,6 +13,7 @@ import io
 from contextlib import redirect_stdout
 import textwrap
 import traceback
+import json
 
 
 def cleanup_code(content):
@@ -25,6 +26,7 @@ class DevOnly(commands.Cog):
     """Commands that are for bot development"""
     def __init__(self, bot):
         self.bot = bot
+
 
     @commands.group(hidden=True)
     @commands.is_owner()
@@ -488,6 +490,19 @@ class DevOnly(commands.Cog):
                     color=c_get_color("red")
                 )
                 return await ctx.send(embed=embed_e3)
+
+    @commands.command()
+    async def botinfo(self, ctx):
+        """Will expand as I go but showing some basic bot info"""
+        embed = discord.Embed(
+           title=f"Bot Info",
+           description=f"""```json
+{json.dumps(self.bot.file_len_dict, indent=4)}
+```""",
+           timestamp=datetime.datetime.utcnow(),
+           color=c_random_color()
+        )
+        await ctx.send(embed=embed)
 
 
 def setup(bot):
