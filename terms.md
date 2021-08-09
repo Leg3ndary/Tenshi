@@ -13,8 +13,10 @@ We reserve the right to ban any account we see fit, for whatever reason without 
 
 - Note almost 100% of the time banned accounts will be banned for a reason.
 
+- If you are unbanned, you will also recieve a single message through discord we take no responsibility if you do not recieve that message once again.
+
 ## 2. Macros
-We do not condone any usage of macros, macros being anything that allows you to automate sending messages without having to press certain keys.
+We do not condone any usage of macros, macros being anything that allows you to automate sending messages without having to press the required keys.
 
 Examples are an auto message sending bot that runs commands for you, a bot that automatically types things for you.
 
@@ -40,6 +42,10 @@ When using our service, you consent to the following data being tracked (Please 
 1. Commands used
 - We will track any messages that use a command that our bot responds too
     - This is purely for performance/insights on what commands our users like to use.
+- The bot will automatically check for hateful speech when commands are used with the bot, ONLY if words listed below, if found we will be able to see the context of this message.
+    - N-word
+    - R-slur
+
 
 # FAQ
 - What happens if we don't get a Direct Message showing the reason for my punishment?
