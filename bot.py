@@ -14,12 +14,6 @@ from gears.cosmetics import *
 
 load_dotenv()
 
-async def get_prefix(bot, message):
-    """Gets the prefix from built cache, if a guild isn't found (Direct Messages) assumes prefix is the below"""
-    if message.guild is None:
-        return "t>"
-    return bot.prefix_cache[str(message.guild.id)]
-
 def len_file(file):
     """Return the file length for a given file"""
     try:
@@ -36,14 +30,15 @@ def get_files(directory: str=None):
     files = []
     if directory:
         if directory == "__pycache__":
-            pass
+            directories = []
         else:
             directories = os.listdir(directory)
             filepath = directory + "/"
     else:
         filepath = ""
         directories = os.listdir()
-    for file in directories:
+
+    for file in directories: 
         if file.endswith(".exe") or file.endswith(".png") or file.endswith(".pyc"):
             pass
         elif "." not in file:
@@ -51,9 +46,14 @@ def get_files(directory: str=None):
             files = files + recursion
         else:
             files.append(f"{filepath}{file}")
-    print(files)
     return files
 
+async def get_prefix(bot, message):
+    """Gets the prefix from built cache, if a guild isn't found (Direct Messages) assumes prefix is the below"""
+    if message.guild is None:
+        return "t>"
+    else:
+        return bot.prefix_cache[str(message.guild.id)]
 
 bot = commands.Bot(
     command_prefix=get_prefix,
@@ -71,7 +71,7 @@ cog_list = [
     "cogs.systeminfo", # Done.
     "cogs.mongodb", # -
     "cogs.settings", # -
-    "cogs.colors", # Not Done, 
+    "cogs.customs", # Not Done, 
     "cogs.moderation", # Done.
     "cogs.language", # Done.
     "cogs.redis", # Not Done.
@@ -118,6 +118,5 @@ async def on_ready():
        color=c_get_color("green")
     )
     await bot.update_channel.send(embed=embed)
-
 
 bot.run(os.getenv("Token"))
