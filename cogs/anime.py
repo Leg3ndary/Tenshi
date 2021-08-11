@@ -14,6 +14,7 @@ import asyncio
 jikan = JikanGear()
 
 def format_time(iso: str):
+    """Reformat an iso time to a human readable format"""
     text = datetime.datetime.fromisoformat(iso).strftime("%c")
     return text
 
@@ -25,6 +26,7 @@ def format_title(eng, jap):
         return f"{eng}/{jap}"
 
 def gen_anime_search(data):
+    """Generate an anime search embed"""
     title = format_title(data["title"], data["title_english"])
 
     anime_embed = discord.Embed(
@@ -95,7 +97,7 @@ class AnimeSearchPage(menus.Menu):
         anime_embed = gen_anime_search(self.data[self.page_number])
         return await channel.send(embed=anime_embed)
 
-    @menus.button(":back_button_triangle:843677189533597749")
+    @menus.button(c_get_emoji("left"))
     async def on_back(self, payload):
         """When we click to go back a page"""
         if self.page_number > 1:
@@ -106,12 +108,12 @@ class AnimeSearchPage(menus.Menu):
         await self.message.edit(embed=anime_embed)
         return await asyncio.sleep(1)
     
-    @menus.button(":pause:820003279941271592")
+    @menus.button(c_get_emoji("stop"))
     async def on_stop(self, payload):
         """If users wanna be nice and stop the embed tracking reactions when its done..."""
         self.stop()
 
-    @menus.button(":play_button_triangle:820007884641402920")
+    @menus.button(c_get_emoji("right"))
     async def on_next(self, payload):
         """When users click next"""
         if self.page_number < self.page_cap:
@@ -122,11 +124,13 @@ class AnimeSearchPage(menus.Menu):
         await self.message.edit(embed=anime_embed)
         return await asyncio.sleep(1)
     
-    @menus.button("\U00002705")
+    @menus.button(c_get_emoji("check"))
     async def on_confirm(self, payload):
         """When users would like to confirm the anime they would like to search"""
         cmd = self.bot.get_command("anime search")
+        print("part 1?")
         await cmd(self.ctx, request=str(self.data[self.page_number]["mal_id"]))
+        print("command worked?")
         self.stop()
 
 class AnimeSearchID(menus.Menu):
@@ -320,7 +324,7 @@ class AnimeSearchID(menus.Menu):
         await self.message.edit(embed=anime_embed)
         return await asyncio.sleep(1)
 
-    @menus.button(":pause:820003279941271592")
+    @menus.button(c_get_emoji("stop"))
     async def on_stop(self, payload):
         """If users wanna be nice and stop us processing this"""
         self.stop()
@@ -353,7 +357,7 @@ class UserSearch(menus.Menu):
         user_embed = gen_user_page(self.data[self.page_number])
         return await channel.send(embed=user_embed)
 
-    @menus.button(":back_button_triangle:843677189533597749")
+    @menus.button(c_get_emoji("left"))
     async def on_back(self, payload):
         """When we click to go back a page"""
         if self.page_number > 1:
@@ -364,12 +368,12 @@ class UserSearch(menus.Menu):
         await self.message.edit(embed=anime_embed)
         return await asyncio.sleep(1)
     
-    @menus.button(":pause:820003279941271592")
+    @menus.button(c_get_emoji("stop"))
     async def on_stop(self, payload):
         """If users wanna be nice and stop the embed tracking reactions when its done..."""
         self.stop()
 
-    @menus.button(":play_button_triangle:820007884641402920")
+    @menus.button(c_get_emoji("right"))
     async def on_next(self, payload):
         """When users click next"""
         if self.page_number < self.page_cap:
@@ -380,7 +384,7 @@ class UserSearch(menus.Menu):
         await self.message.edit(embed=anime_embed)
         return await asyncio.sleep(1)
     
-    #@menus.button("\U00002705")
+    #@menus.button(c_get_emoji("check"))
     #async def on_confirm(self, payload):
         #"""When users would like to confirm the anime they would like to search"""
         #cmd = self.bot.get_command("anime search")
@@ -578,7 +582,9 @@ class Anime(commands.Cog):
 
         else:
             # Now we know its just a regular text search result so we use this
-            data = await jikan.search_anime(request)
+            data = await jikan.get_anime_search({
+                "q": request
+            })
             if not data["data"]:
                 embed_error2 = discord.Embed(
                     title="Looks like there aren't any matches...",
@@ -615,6 +621,9 @@ class Anime(commands.Cog):
             user_page = UserPage(data)
             await user_page.start(ctx)
 
+    @commands.command()
+    async def test(self, ctx):
+        print(await jikan.view_headers())
 
 def setup(bot):
     bot.add_cog(Anime(bot))

@@ -24,7 +24,10 @@ class JikanGear():
                     pass
                 else:
                     print(f"[ERROR] [{datetime.datetime.utcnow()}]\nError Code: {request.status}\n{await request.json()}")
-                await self.append_header(request.headers)
+                try:
+                    await self.append_header(request.headers)
+                except:
+                    pass
                 return await request.json()
 
     async def view_headers(self, header=None):
@@ -38,16 +41,15 @@ class JikanGear():
     async def append_header(self, header):
         """Add a header to our small database"""
         self.header_data = self.header_data[:self.header_data_limit - 1].append(header)
-        print("finished")
 
     async def to_url(self, dictionary: dict):
         """Create a url string based off dict"""
         if not dictionary:
             url_link = ""
         if len(dictionary) == 1:
-            url_link = f"?{dictionary.keys()[0]}={dictionary[dictionary.keys()[0]]}"
+            url_link = f"?{list(dictionary.keys())[0]}={dictionary[list(dictionary.keys())[0]]}"
         elif len(dictionary) >= 2:
-            url_link = f"?{dictionary.keys()[0]}={dictionary[dictionary.keys()[0]]}"
+            url_link = f"?{list(dictionary.keys())[0]}={dictionary[list(dictionary.keys())[0]]}"
             value = 0
             for param in dictionary.keys():
                 if value == 0:
