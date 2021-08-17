@@ -112,7 +112,7 @@ class UrbanMenu(menus.Menu):
         embed = await u_gen_embed(self.data[self.page_number])
         return await channel.send(embed=embed)
 
-    @menus.button(":back_button_triangle:843677189533597749")
+    @menus.button(c_get_emoji("left"))
     async def on_back(self, payload):
         """When we click to go back a page"""
         if self.on_cooldown is True:
@@ -127,12 +127,12 @@ class UrbanMenu(menus.Menu):
         await asyncio.sleep(2)
         self.on_cooldown = False
     
-    @menus.button(":pause:820003279941271592")
+    @menus.button(c_get_emoji("stop"))
     async def on_stop(self, payload):
         """If users wanna be nice and stop the embed tracking reactions when its done..."""
         self.stop()
 
-    @menus.button(":play_button_triangle:820007884641402920")
+    @menus.button(c_get_emoji("right"))
     async def on_next(self, payload):
         """When users click next"""
         if self.on_cooldown is True:
@@ -162,7 +162,7 @@ class Dictionary(menus.Menu):
         embed = await d_gen_embed(self.data["meanings"][self.page_number], self.data["word"])
         return await channel.send(embed=embed)
 
-    @menus.button(":back_button_triangle:843677189533597749")
+    @menus.button(c_get_emoji("left"))
     async def on_back(self, payload):
         """When we click to go back a page"""
         if self.on_cooldown is True:
@@ -177,12 +177,12 @@ class Dictionary(menus.Menu):
         await asyncio.sleep(2)
         self.on_cooldown = False
     
-    @menus.button(":pause:820003279941271592")
+    @menus.button(c_get_emoji("stop"))
     async def on_stop(self, payload):
         """If users wanna be nice and stop the embed tracking reactions when its done..."""
         self.stop()
 
-    @menus.button(":play_button_triangle:820007884641402920")
+    @menus.button(c_get_emoji("right"))
     async def on_next(self, payload):
         """When users click next"""
         if self.on_cooldown is True:
