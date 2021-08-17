@@ -55,12 +55,12 @@ async def get_prefix(bot, message):
     else:
         return bot.prefix_cache[str(message.guild.id)]
 
+
 bot = commands.Bot(
     command_prefix=get_prefix,
     intents=discord.Intents.all(),
     activity=discord.Streaming(name="Music - t>help", url="https://www.youtube.com/watch?v=Turf7WDB3iY")
 )
-
 
 cog_list = [
     "cogs.devonly", # Done. May add more stuff idk
@@ -77,7 +77,8 @@ cog_list = [
     "cogs.redis", # Not Done.
     "cogs.errorhandler", # Done.
     "cogs.exalia.exalia", # Not Done.
-    "cogs.photos" # Not Done
+    "cogs.photos", # Not Done
+    "cogs.supercell"
 ]
 
 bot.cog_list = cog_list
@@ -110,12 +111,12 @@ async def on_ready():
     # Remove on actual bot, only used for testing purposes
     bot.update_channel = await bot.fetch_channel(866868897398259732)
     embed = discord.Embed(
-       title="Cogs",
-       description=f"""```diff
+    title="Cogs",
+    description=f"""```diff
 + {len(cog_list)} cogs loaded in {(round((end - start) * 1000, 2))/1000} seconds.
 ```""",
-       timestamp=datetime.datetime.utcnow(),
-       color=c_get_color("green")
+    timestamp=datetime.datetime.utcnow(),
+    color=c_get_color("green")
     )
     await bot.update_channel.send(embed=embed)
 
