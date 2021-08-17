@@ -4,7 +4,6 @@ Copyright (C) 2021 Ben Z.
 This software is licensed under Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)
 """
 
-
 import aiohttp
 import datetime
 
@@ -18,8 +17,8 @@ class JikanGear():
     """Important Methods"""
     async def request_url(self, url: str, parameters=""):
         """Request a url from the API"""
-        async with aiohttp.ClientSession() as jikan_session:
-            async with jikan_session.get(f"https://api.jikan.moe/v4{url}{await self.to_url(parameters)}") as request:
+        async with self.aiohttp_session as session:
+            async with session.get(f"https://api.jikan.moe/v4{url}{await self.to_url(parameters)}") as request:
                 if request.status in [200, 400]:
                     pass
                 else:

@@ -395,7 +395,7 @@ class UserSearch(menus.Menu):
 
 class UserPage(menus.Menu):
     """View and display user statistics and pages"""
-    def __init__(self, data):
+    def __init__(self, data, jikan):
         super().__init__(timeout=60)
         self.data = data
         self.stats = None
@@ -577,8 +577,6 @@ class Anime(commands.Cog):
                 )
                 return await ctx.send(embed=embed_error)
 
-            anime_page = AnimeSearchID(data["data"])
-            return await anime_page.start(ctx)
 
         else:
             # Now we know its just a regular text search result so we use this
@@ -618,12 +616,8 @@ class Anime(commands.Cog):
                 return await user_start.start(ctx)
         else:
             data = data["data"]
-            user_page = UserPage(data)
+            user_page = UserPage(data, jikan) 
             await user_page.start(ctx)
-
-    @commands.command()
-    async def test(self, ctx):
-        print(await jikan.view_headers())
 
 def setup(bot):
     bot.add_cog(Anime(bot))
