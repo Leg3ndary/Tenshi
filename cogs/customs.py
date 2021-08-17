@@ -23,7 +23,7 @@ async def gen_color_embed(color):
     return embed
 
 
-class Colors(menus.Menu):
+class ColorsMenu(menus.Menu):
     """Color menu too view our colors"""
     def __init__(self, color):
         super().__init__(timeout=60)
@@ -73,8 +73,119 @@ class Colors(menus.Menu):
         self.on_cooldown = False
 
 
-class Colors(commands.Cog):
-    """Everything related to Tenshi's colors"""
+async def gen_emoji_embed(emoji):
+    """Generate an embed based on the given emoji with pairs"""
+    embed = discord.Embed(
+       title=f"{emoji} Info",
+       description=f"""""",
+       timestamp=datetime.datetime.utcnow(),
+       color=c_random_color()
+    )
+    return embed
+
+
+class EmojisMenu(menus.Menu):
+    """Emoji menu too view our emojis dynamically"""
+    def __init__(self, ctx):
+        super().__init__(timeout=60)
+        self.ctx = ctx
+        self.page_cap = len(colors)
+        self.page_number = 0
+        self.on_cooldown = False
+
+    async def send_initial_message(self, ctx, channel):
+        """Initial Page thats sent"""
+        embed = await gen_color_embed()
+        return await channel.send(embed=embed)
+
+    @menus.button(c_get_emoji("left"))
+    async def on_back(self, payload):
+        """When we click to go back a page"""
+        if self.on_cooldown is True:
+            return
+        elif self.page_number > 1:
+            self.page_number -= 1
+        else:
+            self.page_number = self.page_cap
+        embed = await gen_emoji_embed()
+        await self.message.edit(embed=embed)
+        self.on_cooldown = True
+        await asyncio.sleep(2)
+        self.on_cooldown = False
+    
+    @menus.button(c_get_emoji("stop"))
+    async def on_stop(self, payload):
+        """If users wanna be nice and stop the embed tracking reactions when its done..."""
+        self.stop()
+
+    @menus.button(c_get_emoji("right"))
+    async def on_next(self, payload):
+        """When users click next"""
+        if self.on_cooldown is True:
+            return
+        elif self.page_number < self.page_cap:
+            self.page_number += 1
+        else:
+            self.page_number = 0
+        embed = await gen_emoji_embed()
+        await self.message.edit(embed=embed)
+        self.on_cooldown = True
+        await asyncio.sleep(2)
+        self.on_cooldown = False
+
+    @menus.button(c_get_emoji("search"))
+    async def on_search(self, payload):
+        """When a user wants to search for something"""
+        if self.on_cooldown is True:
+            return
+        try:
+            message = await self.ctx.bot.wait_for('message', timeout=30, check=lambda x: x.author == self.ctx.author and x.channel == self.ctx.channel and len(x.content) > 2)
+
+        except asyncio.TimeoutError:
+            timeout = discord.Embed(
+               title=f"Error",
+               description=f"""You took too long to search for something!""",
+               timestamp=datetime.datetime.utcnow(),
+               color=c_get_color("red")
+            )
+            return await self.ctx.send(embed=timeout, delete_after=5)
+
+        # Searching for the emoji
+        matches = []
+        for emoji in emojis.keys():
+            if emoji.startswith(message):
+                matches.append(emoji)
+
+        if not matches:
+            embed_error = discord.Embed(
+               title=f"Error",
+               description=f"""Your search returned no results!""",
+               timestamp=datetime.datetime.utcnow(),
+               color=c_get_color("red")
+            )
+            return await self.ctx.send(embed=embed_error, delete_after=5)
+        
+        elif len(matches) > 1:
+            emoji_view = ""
+            for num, emojithing in enumerate(matches, 1):
+                emoji_view = f"""{emoji_view}\n{num}. {emojithing}"""
+
+            embed_await_choose = discord.Embed(
+               title=f"Multiple Results Were Found!",
+               description=f"""Reply with a number to choose it!
+```md
+{emoji_view}
+```""",
+               timestamp=datetime.datetime.utcnow(),
+               color=c_get_color("green")
+            )
+            user_choice = await self.ctx.send(embed=embed_await_choose)
+
+            
+
+
+class Customs(commands.Cog):
+    """All custom art, colors etc that we use"""
     def __init__(self, bot):
         self.bot = bot
 
@@ -90,28 +201,6 @@ class Colors(commands.Cog):
             )
             return await ctx.send(embed=embed)
 
-    @colors.command(help="Display the Navy Color")
-    async def navy(self, ctx):
-        embed = discord.Embed(
-            title="Navy",
-            description="Navy",
-            color=self.bot.default_colors["navy"],
-            timestamp=datetime.datetime.utcnow()
-        )
-        await ctx.send(embed=embed)
 
-    @colors.command(
-        help="Display the Blue Color"
-    )
-    async def blue(self, ctx):
-        embed = discord.Embed(
-            title="Blue",
-            description="Blue",
-            color=self.bot.default_colors["Blue"],
-            timestamp=datetime.datetime.utcnow()
-        )
-        await ctx.send(embed=embed)
-
-# Adding the Cog
 def setup(bot):
-    bot.add_cog(Colors(bot))
+    bot.add_cog(Customs(bot))
