@@ -5,7 +5,6 @@ This software is licensed under Creative Commons Attribution-NonCommercial-NoDer
 """
 
 import datetime 
-from cogs.colors import *
 import os
 import motor.motor_asyncio
 

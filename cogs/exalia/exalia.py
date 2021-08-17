@@ -269,10 +269,10 @@ class Exalia(commands.Cog):
         )
         await message.edit(embed=embed_3)
 
-        await message.add_reaction("✅")
+        await message.add_reaction(c_get_emoji("check"))
 
         try:
-            await self.bot.wait_for("reaction_add", check=lambda reaction, user: user == ctx.author and str(reaction.emoji) == "✅", timeout=60)
+            await self.bot.wait_for("reaction_add", check=lambda reaction, user: user == ctx.author and str(reaction.emoji) == c_get_emoji("check"), timeout=60)
         except asyncio.TimeoutError:
             return await message.edit(embed=cancelled)
 
