@@ -43,8 +43,15 @@ class CocClient():
                 final.update({"/request-status":request.status})
                 return final
 
-    async def verify_account(self):
+    async def add_account():
+        """Add an account to our database"""
+        
+
+    async def verify_account(self, tag: str, token: str):
         """Verifying an account with a post request"""
+        await self.users.find({
+            "thing": ""
+        })
 
     async def to_url(self, dictionary: dict):
         """Create a url string based off dict"""

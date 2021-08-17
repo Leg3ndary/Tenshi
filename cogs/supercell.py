@@ -45,7 +45,9 @@ async def gen_coc_user_page(data):
         inline=False
     )
     embed.add_field(
-        name=""
+        name="s",
+        value="s",
+        inline=False
     )
     embed.set_thumbnail(
         url=data["league"]["iconUrls"]["medium"]
