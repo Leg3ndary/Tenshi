@@ -6,7 +6,7 @@ This software is licensed under Creative Commons Attribution-NonCommercial-NoDer
 
 import discord
 from discord.ext import commands
-import datetime
+from gears.hbot import h_get_time
 import asyncio
 import motor.motor_asyncio
 import os
@@ -45,7 +45,7 @@ class Settings(commands.Cog):
 ```fix
 {prefixes_list}
 ```""",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_random_color()
             )
             await ctx.send(embed=embed)
@@ -60,7 +60,7 @@ class Settings(commands.Cog):
                 description=f"""{prefix} must be less then `10` characters
                 Not sure why you need more then that... 
                 Already a pain typing it out""",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_get_color("red")
             )
             return await ctx.send(embed=embed_se)
@@ -72,7 +72,7 @@ class Settings(commands.Cog):
                 title="Prefix Error",
                 description=f"""Your server has too many prefixes!
                 You may have a max of 5 prefixes!""",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_get_color("red")
             )
             return await ctx.send(embed=embed_ne)
@@ -81,7 +81,7 @@ class Settings(commands.Cog):
             embed_paf = discord.Embed(
                 title="Error",
                 description=f"""Prefix {prefix} has already been added to your server!""",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_get_color("red")
             )
             return await ctx.send(embed=embed_paf)
@@ -101,7 +101,7 @@ class Settings(commands.Cog):
 ```fix
 {prefixes_format}
 ```""",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_get_color("green")
         )
         return await ctx.send(embed=embed)
@@ -117,7 +117,7 @@ class Settings(commands.Cog):
                 title="Error",
                 description=f"""Sorry but that prefix wasn't found!
                 Make sure you're removing existing prefixes!""",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_get_color("red")
             )
             return await ctx.send(embed=embed_nf)
@@ -126,7 +126,7 @@ class Settings(commands.Cog):
             embed_tl = discord.Embed(
                 title="Error",
                 description="""You need at least one prefix!""",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_get_color("red")
             )
             return await ctx.send(embed=embed_tl)
@@ -146,7 +146,7 @@ class Settings(commands.Cog):
 ```fix
 {prefixes_format}
 ```""",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_get_color("green")
         )
         return await ctx.send(embed=embed)
@@ -162,7 +162,7 @@ class Settings(commands.Cog):
 t>
 ```
             This change is irreversable.""",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_get_color("yellow")
         )
         embed_msg = await ctx.send(embed=embed_rusure)
@@ -177,7 +177,7 @@ t>
             embed_timeout = discord.Embed(
                 title="Canceled",
                 description="You didn't react within 30 seconds",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_get_color("red")
             )
             return await ctx.send(embed=embed_timeout)
@@ -193,7 +193,7 @@ t>
 ```fix
 t>
 ```""",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_get_color("green")
             )
             return await ctx.send(embed=embed_reset)
@@ -202,7 +202,7 @@ t>
             embed_cancel = discord.Embed(
                 title="Canceled",
                 description="Cancelled Reset",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_get_color("red")
             )
             return await ctx.send(embed=embed_cancel)

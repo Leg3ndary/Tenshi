@@ -6,7 +6,7 @@ This software is licensed under Creative Commons Attribution-NonCommercial-NoDer
 
 import discord
 from discord.ext import commands
-import datetime
+from gears.hbot import h_get_time
 import os
 import motor.motor_asyncio
 import time
@@ -140,7 +140,7 @@ class MongoDB(commands.Cog):
 {database_list}
 ```
             **{len(databases)}** databases currently loaded in cluster.""",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_random_color()
         )
         await ctx.send(embed=embed)
@@ -154,7 +154,7 @@ class MongoDB(commands.Cog):
                 description=f"""```diff
 - Database {db} not found
 ```""",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_get_color("red")
             )
             return await ctx.send(embed=embed_error)
@@ -171,7 +171,7 @@ class MongoDB(commands.Cog):
 {collection_list}
 ```
             **{len(await database.list_collection_names())}** collections currently loaded in `{db}`.""",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_random_color()
         )
         await ctx.send(embed=embed)
@@ -191,7 +191,7 @@ class MongoDB(commands.Cog):
                 description=f"""```diff
 - Database {db} not found
 ```""",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_get_color("red")
             )
             return await ctx.send(embed=embed_error)
@@ -215,7 +215,7 @@ class MongoDB(commands.Cog):
 = Data Sent: {get_size(data['network']['bytesOut'])} =
 = Total Requests: {data['network']['numRequests']} =
 ```""",
-            timetstamp=datetime.datetime.utcnow(),
+            timetstamp=h_get_time(),
             color=c_random_color()
         )
         await ctx.send(embed=embed)
@@ -228,7 +228,7 @@ class MongoDB(commands.Cog):
                 description=f"""```diff
 - Database {db} not found
 ```""",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_get_color("red")
             )
             return await ctx.send(embed=embed_error)
@@ -248,7 +248,7 @@ class MongoDB(commands.Cog):
 [ Total Object Size ]
 = {get_size(data['dataSize'])} =
 ```""",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_random_color()
         )
         await ctx.send(embed=embed)

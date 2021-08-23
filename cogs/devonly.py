@@ -6,7 +6,7 @@ This software is licensed under Creative Commons Attribution-NonCommercial-NoDer
 
 import discord
 from discord.ext import commands
-import datetime
+from gears.hbot import h_get_time
 from gears.cosmetics import *
 import unicodedata
 import io
@@ -27,7 +27,6 @@ class DevOnly(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-
     @commands.group(hidden=True)
     @commands.is_owner()
     async def dev(self, ctx):
@@ -36,7 +35,7 @@ class DevOnly(commands.Cog):
             embed = discord.Embed(
             title=f"{ctx.author.display_name} is the Dev",
             description=f"This message is only displayable by him.",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_get_color("black")
         )
             await ctx.send(embed=embed)
@@ -58,7 +57,7 @@ class DevOnly(commands.Cog):
 - {cog} loading failed
 - Reason: {e}
 ```""",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_random_color()
             )
             return await ctx.send(embed=embed_fail)
@@ -69,7 +68,7 @@ class DevOnly(commands.Cog):
                 description=f"""```diff
 + {cog} loaded successfuly
 ```""",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_random_color()
             )
             await ctx.send(embed=embed)
@@ -91,7 +90,7 @@ class DevOnly(commands.Cog):
 - {cog} unloading failed
 - Reason: {e}
 ```""",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_random_color()
             )
             return await ctx.send(embed=embed_fail)
@@ -102,7 +101,7 @@ class DevOnly(commands.Cog):
                 description=f"""```diff
 + {cog} unloaded successfully
 ```""",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_random_color()
             )
             await ctx.send(embed=embed)
@@ -125,7 +124,7 @@ class DevOnly(commands.Cog):
 - {cog} reloading failed
 - Reason: {e}
 ```""",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_random_color()
             )
             return await ctx.send(embed=embed_fail)
@@ -136,7 +135,7 @@ class DevOnly(commands.Cog):
                 description=f"""```diff
 + {cog} reloaded successfully
 ```""",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_random_color()
             )
             return await ctx.send(embed=embed)
@@ -158,7 +157,7 @@ class DevOnly(commands.Cog):
             description=f"""```
 {servers_var}
 ```""",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_random_color()
         )
         await ctx.send(embed=embed)
@@ -200,7 +199,7 @@ class DevOnly(commands.Cog):
 {cog_visual}```
             `{success}` cogs have been reloaded.
             `{fails}` cogs have failed loading.""",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=embed_color
         )
         await ctx.send(embed=embed)
@@ -216,7 +215,7 @@ class DevOnly(commands.Cog):
         print("\x1b[2J")
         embed = discord.Embed(
             title="Terminal Cleared",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_get_color("black")
         )
         await ctx.send(embed=embed)
@@ -235,7 +234,7 @@ class DevOnly(commands.Cog):
             embed = discord.Embed(
                title="Status Changed",
                description=f"""Changed successfully.""",
-               timestamp=datetime.datetime.utcnow(),
+               timestamp=h_get_time(),
                color=c_get_color("green")
             )
             await ctx.send(embed=embed)
@@ -247,7 +246,7 @@ class DevOnly(commands.Cog):
 ```diff
 - {e}
 ```""",
-               timestamp=datetime.datetime.utcnow(),
+               timestamp=h_get_time(),
                color=c_get_color("red")
             )
             await ctx.send(embed=embed_error)
@@ -260,7 +259,7 @@ class DevOnly(commands.Cog):
             embed = discord.Embed(
                title="Status Changed",
                description=f"""Changed successfully.""",
-               timestamp=datetime.datetime.utcnow(),
+               timestamp=h_get_time(),
                color=c_get_color("green")
             )
             await ctx.send(embed=embed)
@@ -272,7 +271,7 @@ class DevOnly(commands.Cog):
 ```diff
 - {e}
 ```""",
-               timestamp=datetime.datetime.utcnow(),
+               timestamp=h_get_time(),
                color=c_get_color("red")
             )
             await ctx.send(embed=embed_error)
@@ -285,7 +284,7 @@ class DevOnly(commands.Cog):
             embed = discord.Embed(
                title="Status Changed",
                description=f"""Changed successfully.""",
-               timestamp=datetime.datetime.utcnow(),
+               timestamp=h_get_time(),
                color=c_get_color("green")
             )
             await ctx.send(embed=embed)
@@ -297,7 +296,7 @@ class DevOnly(commands.Cog):
 ```diff
 - {e}
 ```""",
-               timestamp=datetime.datetime.utcnow(),
+               timestamp=h_get_time(),
                color=c_get_color("red")
             )
             await ctx.send(embed=embed_error)
@@ -310,7 +309,7 @@ class DevOnly(commands.Cog):
             embed = discord.Embed(
                title="Status Changed",
                description=f"""Changed successfully.""",
-               timestamp=datetime.datetime.utcnow(),
+               timestamp=h_get_time(),
                color=c_get_color("green")
             )
             await ctx.send(embed=embed)
@@ -322,7 +321,7 @@ class DevOnly(commands.Cog):
 ```diff
 - {e}
 ```""",
-               timestamp=datetime.datetime.utcnow(),
+               timestamp=h_get_time(),
                color=c_get_color("red")
             )
             await ctx.send(embed=embed_error)
@@ -335,7 +334,7 @@ class DevOnly(commands.Cog):
             embed = discord.Embed(
                title="Status Changed",
                description=f"""Changed successfully.""",
-               timestamp=datetime.datetime.utcnow(),
+               timestamp=h_get_time(),
                color=c_get_color("green")
             )
             await ctx.send(embed=embed)
@@ -347,7 +346,7 @@ class DevOnly(commands.Cog):
 ```diff
 - {e}
 ```""",
-               timestamp=datetime.datetime.utcnow(),
+               timestamp=h_get_time(),
                color=c_get_color("red")
             )
             await ctx.send(embed=embed_error)
@@ -362,7 +361,7 @@ class DevOnly(commands.Cog):
                description=f"""```md
 - Owned by {guild.owner} - {guild.owner_id}
 ```""",
-               timestamp=datetime.datetime.utcnow(),
+               timestamp=h_get_time(),
                color=c_random_color()
             )
             await ctx.send(embed=embed)
@@ -373,7 +372,7 @@ class DevOnly(commands.Cog):
                description=f"""```diff
 - {e}
 ```""",
-               timestamp=datetime.datetime.utcnow(),
+               timestamp=h_get_time(),
                color=c_get_color("red")
             )
             await ctx.send(embed=embed_error)
@@ -395,7 +394,7 @@ class DevOnly(commands.Cog):
         embed = discord.Embed(
             title="Charinfo",
             description=msg,
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_random_color()
         )
         await ctx.send(embed=embed)
@@ -413,7 +412,7 @@ class DevOnly(commands.Cog):
             no_cb = discord.Embed(
                 title="Error",
                 description="Include a code block dumb fuck",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_random_color()
             )
             return await ctx.send(embed=no_cb)
@@ -438,7 +437,7 @@ class DevOnly(commands.Cog):
                 description=f"""```py
 {e.__class__.__name__}: {e}
 ```""",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_get_color("red")
             )
             return await ctx.send(embed=embed_e1)
@@ -456,7 +455,7 @@ class DevOnly(commands.Cog):
                 description=f"""```py
 {value}{traceback.format_exc()}
 ```""",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_get_color("red")
             )
             return await ctx.send(embed=embed_e2)
@@ -475,7 +474,7 @@ class DevOnly(commands.Cog):
                         description=f"""```py
 {value}
 ```""",
-                        timestamp=datetime.datetime.utcnow(),
+                        timestamp=h_get_time(),
                         color=c_get_color("green")
                     )
                     return await ctx.send(embed=evaluated)
@@ -486,7 +485,7 @@ class DevOnly(commands.Cog):
                     description=f"""```py
 {value}{out}
 ```""",
-                    timestamp=datetime.datetime.utcnow(),
+                    timestamp=h_get_time(),
                     color=c_get_color("red")
                 )
                 return await ctx.send(embed=embed_e3)
@@ -499,7 +498,7 @@ class DevOnly(commands.Cog):
            description=f"""```json
 {json.dumps(self.bot.file_len_dict, indent=4)}
 ```""",
-           timestamp=datetime.datetime.utcnow(),
+           timestamp=h_get_time(),
            color=c_random_color()
         )
         await ctx.send(embed=embed)

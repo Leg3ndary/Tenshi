@@ -6,7 +6,7 @@ This software is licensed under Creative Commons Attribution-NonCommercial-NoDer
 
 import discord
 from discord.ext import commands, menus
-import datetime
+from gears.hbot import h_get_time
 import aiohttp
 from gears.cosmetics import *
 import asyncio
@@ -23,7 +23,7 @@ async def ud_get_word(word: str):
             if request.status == 200:
                 return await request.json()
             else:
-                print(f"[ERROR] [{datetime.datetime.utcnow()}] {request.status} {await request.json()}")
+                print(f"[ERROR] [{h_get_time()}] {request.status} {await request.json()}")
 
 async def d_get_word(language, word):
     async with aiohttp.ClientSession() as session:
@@ -48,7 +48,7 @@ async def u_gen_embed(data):
         title=f"""__{data["word"]}__""",
         description=f"""{await clean(data["definition"])}""",
         url=data["permalink"],
-        timestamp=datetime.datetime.utcnow(),
+        timestamp=h_get_time(),
         color=c_random_color()
     )
     embed.set_author(
@@ -75,7 +75,7 @@ async def d_gen_embed(data, word):
     embed = discord.Embed(
        title=f"""{word.capitalize()} - {data["partOfSpeech"].capitalize()}""",
        description=f"""""",
-       timestamp=datetime.datetime.utcnow(),
+       timestamp=h_get_time(),
        color=c_random_color()
     )
     definition_num = 1
@@ -233,7 +233,7 @@ class Language(commands.Cog):
             embed_failure = discord.Embed(
                 title='Search Failure',
                 description="Seems like your search didn't turn up any matches...",
-                timstamp=datetime.datetime.utcnow(),
+                timstamp=h_get_time(),
                 color=c_random_color()
             )
             return await ctx.send(embed=embed_failure)
@@ -247,7 +247,7 @@ class Language(commands.Cog):
             embed = discord.Embed(
                 title="Imagine",
                 description=f"""""",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_random_color()
             )
             return await ctx.send(embed=embed)
@@ -273,7 +273,7 @@ class Language(commands.Cog):
             description=f"""```
 {end.text}
 ```""",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_random_color()
         )
         
@@ -299,7 +299,7 @@ class Language(commands.Cog):
             description=f"""```
 {end.text}
 ```""",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_random_color()
         )
 
@@ -320,7 +320,7 @@ class Language(commands.Cog):
             description=f"""```md
 {self.bot.viewlang}
 ```""",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_random_color()
         )
         await ctx.author.send(embed=embed)

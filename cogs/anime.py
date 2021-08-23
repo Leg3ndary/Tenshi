@@ -10,6 +10,7 @@ import datetime
 from gears.cosmetics import *
 from gears.jikan import JikanGear
 import asyncio
+from gears.hbot import h_get_time
 
 jikan = JikanGear()
 
@@ -557,7 +558,7 @@ class Anime(commands.Cog):
                         description=f"""Currently you can only search for images!
                         `{ctx.message.attachments[0].content_type.replace("image/", "")}` is not a supported file type.""",
                         color=c_get_color("red"),
-                        timestamp=datetime.datetime.utcnow()
+                        timestamp=h_get_time()
                     )
                     return await ctx.send(embed=invalid_format)
                 else:
@@ -573,7 +574,7 @@ class Anime(commands.Cog):
                     title="Looks like there aren't any matches...",
                     description=f"""Sorry but we couldn't find any matches for ID: `{request}` make sure this is the correct MYANIMELIST ID""",
                     color=c_get_color("red"),
-                    timestamp=datetime.datetime.utcnow()
+                    timestamp=h_get_time()
                 )
                 return await ctx.send(embed=embed_error)
 
@@ -588,7 +589,7 @@ class Anime(commands.Cog):
                     title="Looks like there aren't any matches...",
                     description=f"""Sorry but we couldn't find any matches for `{request}` try being as specific possible and make sure to spell everything correctly!""",
                     color=c_get_color("red"),
-                    timestamp=datetime.datetime.utcnow()
+                    timestamp=h_get_time()
                 )
                 return await ctx.send(embed=embed_error2)
             else:

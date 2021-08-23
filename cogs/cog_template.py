@@ -6,7 +6,7 @@ This software is licensed under Creative Commons Attribution-NonCommercial-NoDer
 
 import discord
 from discord.ext import commands
-import datetime
+from gears.hbot import h_get_time
 from gears.cosmetics import *
 
 

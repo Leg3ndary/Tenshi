@@ -7,7 +7,7 @@ This software is licensed under Creative Commons Attribution-NonCommercial-NoDer
 import discord
 from discord.ext import commands
 from gears.cosmetics import *
-import datetime
+from gears.hbot import h_get_time
 
 
 class Moderation(commands.Cog):
@@ -43,7 +43,7 @@ class Moderation(commands.Cog):
             embed = discord.Embed(
                 title="Message Purge", 
                 description=f'{amount} messages {word_thing} been purged by {ctx.message.author.mention}', 
-                timestamp=datetime.datetime.utcnow(), 
+                timestamp=h_get_time(), 
                 color=c_get_color("green")
             )
             await ctx.send(embed=embed, delete_after=5)
@@ -54,7 +54,7 @@ class Moderation(commands.Cog):
                 title="Error",
                 description=f"""Something went wrong with this command...
                 Make sure the messages you are purging aren't over 14 days old, make sure you're also actually purging messsages...""",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_get_color("red")
             )
             await ctx.send(embed=error)
@@ -74,7 +74,7 @@ class Moderation(commands.Cog):
             embed = discord.Embed(
                 title='Kick Error', 
                 description="You cannot kick yourself!", 
-                timestamp=datetime.datetime.utcnow(), 
+                timestamp=h_get_time(), 
                 color=c_get_color("red")
             )
             return await ctx.send(embed=embed, delete_after=5)
@@ -83,7 +83,7 @@ class Moderation(commands.Cog):
             embed = discord.Embed(
                 title='Member Kicked', 
                 description=f'Member `{member.display_name}{member.discriminator}` ID: `{member.id}` was kicked.', 
-                timestamp=datetime.datetime.utcnow(), 
+                timestamp=h_get_time(), 
                 color=c_get_color("green")
             )
             return await ctx.send(embed=embed)
@@ -107,14 +107,14 @@ class Moderation(commands.Cog):
 ```diff
 - {reason}
 ```""",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_get_color("green")
             )
             return await ctx.send(embed=embed)
         except discord.NotFound:
             embed_fail = discord.Embed(
                 title=f"{member} Not Found",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_get_color("red")
             )
             return await ctx.send(embed=embed_fail)
@@ -134,14 +134,14 @@ class Moderation(commands.Cog):
             embed = discord.Embed(
                 title=f"{member} Unbanned",
                 description=f"Responsible Moderator: {ctx.author.mention}",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_get_color("green")
             )
             await ctx.send(embed=embed)
         except discord.NotFound:
             embed_fail = discord.Embed(
                 title=f"{member} not found.",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_get_color("red")
             )
             await ctx.send(embed=embed_fail)

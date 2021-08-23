@@ -11,62 +11,21 @@ from dotenv import load_dotenv
 import os
 import time
 from gears.cosmetics import *
+from gears.hbot import h_get_prefix, h_get_files, h_len_file, h_get_time
 
 load_dotenv()
 
-def len_file(file):
-    """Return the file length for a given file"""
-    try:
-        with open(file, encoding="utf8") as f:
-            for i, l in enumerate(f):
-                pass
-        return i + 1
-    except Exception as e:
-        print(e)
-        return 0
-
-def get_files(directory: str=None):
-    """Return every file using recursion"""
-    files = []
-    if directory:
-        if directory == "__pycache__":
-            directories = []
-        else:
-            directories = os.listdir(directory)
-            filepath = directory + "/"
-    else:
-        filepath = ""
-        directories = os.listdir()
-
-    for file in directories: 
-        if file.endswith(".exe") or file.endswith(".png") or file.endswith(".pyc"):
-            pass
-        elif "." not in file:
-            recursion = get_files(f"{filepath}{file}")
-            files = files + recursion
-        else:
-            files.append(f"{filepath}{file}")
-    return files
-
-async def get_prefix(bot, message):
-    """Gets the prefix from built cache, if a guild isn't found (Direct Messages) assumes prefix is the below"""
-    if message.guild is None:
-        return "t>"
-    else:
-        return bot.prefix_cache[str(message.guild.id)]
-
-
 bot = commands.Bot(
-    command_prefix=get_prefix,
+    command_prefix=h_get_prefix,
     intents=discord.Intents.all(),
     activity=discord.Streaming(name="Music - t>help", url="https://www.youtube.com/watch?v=Turf7WDB3iY")
 )
 
 cog_list = [
     "cogs.devonly", # Done. May add more stuff idk
-    "cogs.help", # Not done, will update formatting last.
+    "cogs.help", # Not done, will update formatting last.   
     "cogs.anime", # Not Done.
-    "cogs.other", # -
+    "cogs.misc", # -
     "cogs.music", # Not done.
     "cogs.systeminfo", # Done.
     "cogs.mongodb", # -
@@ -87,8 +46,8 @@ file_len_list = {}
 total = 0
 
 start = time.monotonic()
-for file in get_files():
-    file_len = len_file(file)
+for file in h_get_files():
+    file_len = h_len_file(file)
     file_len_list[file] = file_len
     total += file_len
 file_len_list["total"] = total 
@@ -111,12 +70,12 @@ async def on_ready():
     # Remove on actual bot, only used for testing purposes
     bot.update_channel = await bot.fetch_channel(866868897398259732)
     embed = discord.Embed(
-    title="Cogs",
-    description=f"""```diff
+        title="Cogs",
+        description=f"""```diff
 + {len(cog_list)} cogs loaded in {(round((end - start) * 1000, 2))/1000} seconds.
 ```""",
-    timestamp=datetime.datetime.utcnow(),
-    color=c_get_color("green")
+        timestamp=h_get_time(),
+        color=c_get_color("green")
     )
     await bot.update_channel.send(embed=embed)
 

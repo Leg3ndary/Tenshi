@@ -6,11 +6,11 @@ This software is licensed under Creative Commons Attribution-NonCommercial-NoDer
 
 import discord
 from discord.ext import commands, menus
-import datetime
 from gears.coc import CocClient, coc_emojis
 from gears.cosmetics import *
 import urllib.parse
 import asyncio
+from gears.hbot import h_get_time
 
 
 coc_colors = {
@@ -35,7 +35,7 @@ async def gen_coc_user_page(data):
        {coc_emojis["trophym"]} **Trophies:** {data["trophies"]} (**Personal Best** {data["bestTrophies"]})
        {coc_emojis["star"]} **War Stars:** {data["warStars"]}
        """,
-       timestamp=datetime.datetime.utcnow(),
+       timestamp=h_get_time(),
        color=c_random_color()
     )
     embed.add_field(
@@ -119,7 +119,7 @@ class Supercell(commands.Cog):
                description=f"""```fix
 {data["message"]}
 ```""",
-               timestamp=datetime.datetime.utcnow(),
+               timestamp=h_get_time(),
                color=c_get_color("yellow")
             )
             return await ctx.send(embed=embed_nf)

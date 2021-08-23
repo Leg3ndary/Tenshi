@@ -6,7 +6,7 @@ This software is licensed under Creative Commons Attribution-NonCommercial-NoDer
 
 import discord
 from discord.ext import commands
-import datetime 
+from gears.hbot import h_get_time
 from gears.cosmetics import *
 from cogs.exalia.inventory import *
 import os
@@ -95,7 +95,7 @@ def is_registered():
                 description=f"""```diff
 - You need to start account first with {ctx.prefix}start!
 ```""",  
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_get_color("red")          
             )
             await ctx.send(embed=embed)
@@ -160,14 +160,14 @@ class Exalia(commands.Cog):
         cancelled = discord.Embed(
             title="Cancelled",
             description="""Cancelled starting a new character in Exalia.""",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_get_color("red")
         )
 
         embed = discord.Embed(
             title=f"Welcome to Exalia {ctx.author.display_name}",
             description=f"""**We are now setting up your account...**""",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_get_color("red")
         )
         await asyncio.sleep(1)
@@ -184,7 +184,7 @@ class Exalia(commands.Cog):
 4. Assassin
 5. Giant
 ```""",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_get_color("yellow")
         )
         embed_1.set_footer(
@@ -229,7 +229,7 @@ class Exalia(commands.Cog):
 ```md
 {s_view}
 ```""",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_get_color("blue")
         )
         embed_2.set_footer(
@@ -261,7 +261,7 @@ class Exalia(commands.Cog):
 + {s_class.capitalize()}
 ```
             **You would like to be a {u_class.capitalize()}, {s_class.capitalize()} correct?**""",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_get_color("yellow")
         )
         embed_3.set_footer(
@@ -279,7 +279,7 @@ class Exalia(commands.Cog):
         embed_4 = discord.Embed(
             title=f"Welcome to Exalia {ctx.author.display_name}",
             description=f"""You are now a `{u_class.capitalize()}, {s_class.capitalize()}`!""",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_get_color("green")
         )
         await message.edit(embed=embed_4)
@@ -327,7 +327,7 @@ class Exalia(commands.Cog):
         embed = discord.Embed(
            title=f"{ctx.author.display_name}'s Profile",
            description=f"""""",
-           timestamp=datetime.datetime.utcnow(),
+           timestamp=h_get_time(),
            color=c_random_color()
         )
         await ctx.send(embed=embed)
@@ -348,7 +348,7 @@ class Exalia(commands.Cog):
             title=f"""{ctx.author.display_name}'s Balance""",
             description=f"""{coin} {bal_d["coins"]:,}
             {gem} {bal_d["gems"]:,}""",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_random_color()
         )
         await ctx.send(embed=embed)
@@ -372,7 +372,7 @@ class Exalia(commands.Cog):
         embed = discord.Embed(
             title=f"{ctx.author.display_name} is working",
             description=f"""You worked for a total of {coin} {amount:,}!""",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_get_color("yellow")
         )
         await ctx.send(embed=embed)

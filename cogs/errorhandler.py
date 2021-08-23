@@ -8,7 +8,7 @@ import discord
 import traceback
 import sys
 from discord.ext import commands
-import datetime
+from gears.hbot import h_get_time
 from gears.cosmetics import *
 
 
@@ -19,7 +19,7 @@ def gen_error_embed(error_text):
         description=f"""```diff
 - {error_text}
 ```""",
-        timestamp=datetime.datetime.utcnow(),
+        timestamp=h_get_time(),
         color=c_get_color("red")
     )
     return embed
@@ -65,7 +65,7 @@ class ErrorHandler(commands.Cog):
             cooldown_embed = discord.Embed(
                 title=f"{ctx.command} is on Cooldown",
                 description=f"""Try again in {error.retry_after:.2f} seconds.""", 
-                timestamp = datetime.datetime.utcnow(),
+                timestamp = h_get_time(),
                 color=c_get_color("red")
             )
             return await ctx.send(embed=cooldown_embed)

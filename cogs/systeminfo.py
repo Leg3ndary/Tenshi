@@ -7,6 +7,7 @@ This software is licensed under Creative Commons Attribution-NonCommercial-NoDer
 import discord
 from discord.ext import commands
 import datetime
+from gears.hbot import h_get_time
 import psutil
 import platform
 from gears.cosmetics import *
@@ -47,7 +48,7 @@ class SystemInfo(commands.Cog):
 ```fix
 t>system {random.choice(options)}
 ```""",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_random_color()
             )
             return await ctx.send(embed=embed)
@@ -77,7 +78,7 @@ t>system {random.choice(options)}
 [ Processor ]
 = {uname.processor} =
 ```""",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_random_color()
             )
         return await ctx.send(embed=embed)
@@ -98,7 +99,7 @@ t>system {random.choice(options)}
 [ Boot Time ]
 = {bt.year}/{bt.month}/{bt.day} {bt.hour}:{bt.minute}:{bt.second} =
 ```""",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_random_color()
             )
         return await ctx.send(embed=embed)
@@ -135,7 +136,7 @@ t>system {random.choice(options)}
 [ Total CPU Usage ]
 = {psutil.cpu_percent()}% =
 ```""",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_random_color()
         )
         return await ctx.send(embed=embed)
@@ -161,7 +162,7 @@ t>system {random.choice(options)}
 [ Percentage ]
 = {svmem.percent}% =
 ```""",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_random_color()
         )
         return await ctx.send(embed=embed)
@@ -184,7 +185,7 @@ t>system {random.choice(options)}
 [ Total Write ]
 = {get_size(disk_io.write_bytes)} =
 ```""",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=h_get_time(),
             color=c_random_color()
         )
         for partition in partitions:

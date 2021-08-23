@@ -130,7 +130,7 @@ async def i_get_item_data(item_id: str, rarity: str):
 
     # If item is somehow not found
     if not item_data:
-        raise Exception(f"Item not Found.\nItem ID: {item_id}\nDict: {item_dict}\n{datetime.datetime.utcnow()}")
+        raise Exception(f"Item not Found.\nItem ID: {item_id}\nDict: {item_dict}\n{h_get_time()}")
 
     # Moving on
     else:

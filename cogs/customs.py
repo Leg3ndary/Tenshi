@@ -6,7 +6,7 @@ This software is licensed under Creative Commons Attribution-NonCommercial-NoDer
 
 import discord
 from discord.ext import commands, menus
-import datetime
+from gears.hbot import h_get_time
 from gears.cosmetics import *
 import asyncio
 
@@ -16,7 +16,7 @@ async def gen_color_embed(color):
     embed = discord.Embed(
        title=f"{reversed_colors[color]}",
        description=f"""""",
-       timestamp=datetime.datetime.utcnow(),
+       timestamp=h_get_time(),
        color=c_random_color()
     )
     embed.set_thumbnail(url=f"""https://res.cloudinary.com/demo/image/upload/w_100,h_100,e_colorize,co_rgb:{hex(color).replace("0x", "")}/one_pixel.png""")
@@ -78,7 +78,7 @@ async def gen_emoji_embed(emoji):
     embed = discord.Embed(
        title=f"{emoji} Info",
        description=f"""""",
-       timestamp=datetime.datetime.utcnow(),
+       timestamp=h_get_time(),
        color=c_random_color()
     )
     return embed
@@ -145,7 +145,7 @@ class EmojisMenu(menus.Menu):
             timeout = discord.Embed(
                title=f"Error",
                description=f"""You took too long to search for something!""",
-               timestamp=datetime.datetime.utcnow(),
+               timestamp=h_get_time(),
                color=c_get_color("red")
             )
             return await self.ctx.send(embed=timeout, delete_after=5)
@@ -160,7 +160,7 @@ class EmojisMenu(menus.Menu):
             embed_error = discord.Embed(
                title=f"Error",
                description=f"""Your search returned no results!""",
-               timestamp=datetime.datetime.utcnow(),
+               timestamp=h_get_time(),
                color=c_get_color("red")
             )
             return await self.ctx.send(embed=embed_error, delete_after=5)
@@ -176,7 +176,7 @@ class EmojisMenu(menus.Menu):
 ```md
 {emoji_view}
 ```""",
-               timestamp=datetime.datetime.utcnow(),
+               timestamp=h_get_time(),
                color=c_get_color("green")
             )
             user_choice = await self.ctx.send(embed=embed_await_choose)
@@ -196,7 +196,7 @@ class Customs(commands.Cog):
             embed = discord.Embed(
                 title="Tenshi's Colors",
                 description="""The following are all of Tenshi's default colors""",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=h_get_time(),
                 color=c_random_color()
             )
             return await ctx.send(embed=embed)
