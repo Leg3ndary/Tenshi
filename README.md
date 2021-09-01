@@ -1,3 +1,12 @@
+# Future
+This is now a singular project that I will likely not be releasing to the public... Why?
+
+Discord.py as a library has been depreceated making most of the bot actually useless as I will not be able to implement slash commands without rewriting the entire bot. Again.
+
+Therefore this will just now be a side project that I work on for fun.
+
+It's been a fun learning experience and I thank Danny the library dev for the wrapper but this is it for Tenshi.
+
 # Tenshi Bot
 I highly **do not** recommend hosting this bot yourself.
 
@@ -15,6 +24,3 @@ To keep it short and simple:
 For more information see the [LICENSE.md](https://github.com/Leg3ndary/Tenshi/blob/main/LICENSE.md) file for the full license.
 
 Copyright (C) 2021 Ben Z.
-
-# Warning
-I accidently added the env without knowing for multiple commits so older commits have been completely removed
